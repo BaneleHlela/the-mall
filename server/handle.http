@@ -1,0 +1,40 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=PyCharm
+
+###
+
+###
+DELETE http://localhost:5000/api/user/671a8dde60750ad1df10c142
+###
+
+###
+POST http://localhost:5000/api/cart/671cd64e71bb7fe6820155e6/addItem
+Content-Type: application/json
+
+{
+  "productId": "671cd93af6b9e04ef7915201",
+  "quantity": "10"
+}
+###
+
+###
+
+PATCH http://localhost:5000/api/user/671a8fcf4b7d14484de0c1d3
+Content-Type: application/json
+
+{
+  "mobile": "0712345889"
+}
+###
+
+###
+GET http://localhost:5000/api/user/login
+Content-Type: application/json
+
+{
+    "email": "jamar@gmail.com",
+    "password": "@Jamar123"
+}
+
+###
