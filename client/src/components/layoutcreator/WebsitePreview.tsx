@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Menubar from '../storecomponents/Menubar';
 import { setInitialLayout } from '../../features/layouts/layoutSettingsSlice';
 import { RootState } from '../../app/store';
+import RecursiveRenderer from './pages/RecursiveRenderer';
 
 const WebsitePreview = () => {
   const dispatch = useDispatch();
@@ -22,12 +23,12 @@ const WebsitePreview = () => {
     };
   }, [dispatch]);
 
-  console.log(layoutSettings.menubar)
 
   return (
     <div>
       {/* render your layout using layoutSettings from Redux */}
-      <Menubar layoutSettingsFrom={layoutSettings}/>
+      {/* <Menubar layoutSettingsFrom={layoutSettings}/> */}
+      <RecursiveRenderer settings={layoutSettings.pages.welcome} />
       <p>Hey, I am the DynamicDiv</p>
     </div>
   );

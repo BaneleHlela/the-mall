@@ -75,7 +75,7 @@ const TextEditor: React.FC<TextEditorProps> = ({
             <label className="text-sm">Input Text</label>
             <input
               type="text"
-              value={getSetting("input") || ""}
+              value={getSetting("input")}
               onChange={handleChange("input")}
               className="border rounded-md px-2 py-1 w-full"
               placeholder="Enter text here"
@@ -118,7 +118,7 @@ const TextEditor: React.FC<TextEditorProps> = ({
             <label className="w-32">Font Size</label>
             <input
               type="text"
-              value={getSetting("fontSize") || "16px"}
+              value={getSetting("fontSize")}
               onChange={handleChange("fontSize")}
               className="border rounded-md px-2 py-1 w-full"
               placeholder="e.g., 16px"

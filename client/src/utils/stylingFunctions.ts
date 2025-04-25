@@ -188,7 +188,7 @@ export const getTextStyles = (text) => {
   if (text.color) styles.color = text.color;
   if (text.weight) styles.fontWeight = text.weight;
   if (text.fontSize) styles.fontSize = text.fontSize;
-  if (text.fontFamily) styles.fontFamily = text.fontFamily
+  if (text.fontFamily) styles.fontFamily = text.fontFamily;
   if (text.fontStyle) styles.fontStyle = text.fontStyle;
   if (text.lineHeight) styles.lineHeight = text.lineHeight;
   if (text.letterSpacing) styles.letterSpacing = text.letterSpacing;
