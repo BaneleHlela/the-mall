@@ -3,20 +3,16 @@ import { getBackgroundStyles, getTextStyles } from "../../../utils/stylingFuncti
 import { Squash, Squeeze, Sling, Rotate } from "hamburger-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store.ts";
-import { useDevice } from '../../context/DeviceContext';
-import { useRenderContext } from '../../context/RenderContext';
 import DynamicIcon from "../../layoutcreator/components/DynamicIcon.tsx";
 
 interface RenderExtrasProps {
-  layout: any; // You can type this more strictly later using your schema
+  layout: any;
   open: boolean;
   toggleMenu: () => void;
 }
 
 const RenderExtras: React.FC<RenderExtrasProps> = ({ open, toggleMenu }) => {
   const menubar = useSelector((state: RootState) => state.layoutSettings.menubar);
-  const renderContext = useRenderContext();
-  const { device } = useDevice();
 
   const desktopExtras = menubar?.desktop?.extras || {};
   const mobileExtras = menubar?.mobile?.extras || {};
@@ -28,8 +24,7 @@ const RenderExtras: React.FC<RenderExtrasProps> = ({ open, toggleMenu }) => {
   return (
     <>
       {/* Desktop & Tablet */}
-      <div className={`${renderContext === "websitePreview" && device !== "mobile" ? 
-        "hidden md:flex h-full items-center gap-2" : "hidden" }`}>
+      <div className="hidden md:flex h-full items-center gap-2">
         {/* Button */}
         {button?.display && (
           <a
@@ -103,11 +98,10 @@ const RenderExtras: React.FC<RenderExtrasProps> = ({ open, toggleMenu }) => {
       </div>
 
       {/* Mobile */}
-      <div className={`${renderContext === "websitePreview" && device === "mobile" ? 
-        "" : "md:hidden flex items-center"}`}>
+      <div className="flex md:hidden items-center">
         {/* Extra Icons */}
         {mobileExtraIcons?.enabled && mobileExtraIcons.icons?.length > 0 && (
-          <div className="flex gap-2 items-center ">
+          <div className="flex gap-2 items-center">
             {mobileExtraIcons.icons.map((icon, index) => (
               <div
                 key={index}
@@ -115,7 +109,6 @@ const RenderExtras: React.FC<RenderExtrasProps> = ({ open, toggleMenu }) => {
                 style={{
                   ...getBackgroundStyles(mobileExtraIcons?.style?.background),
                   ...getTextStyles(mobileExtraIcons?.style?.text),
-                  backgroundColor: "pink"
                 }}
               >
                 <a href={icon.redirectTo || "#"} target="_blank" rel="noopener noreferrer">
@@ -134,14 +127,13 @@ const RenderExtras: React.FC<RenderExtrasProps> = ({ open, toggleMenu }) => {
         {/* Hamburger Menu */}
         {hamburger?.Type && (
           <div
-          className="flex items-center z-50"
-          style={{
-            
-            border: "none", // Prevents any unwanted border
-            ...getBackgroundStyles(hamburger?.hamburgerStyle?.background),
-            ...getTextStyles(hamburger?.hamburgerStyle?.text),
-          }}
-        >
+            className="flex items-center z-50"
+            style={{
+              border: "none",
+              ...getBackgroundStyles(hamburger?.hamburgerStyle?.background),
+              ...getTextStyles(hamburger?.hamburgerStyle?.text),
+            }}
+          >
             {hamburger.Type === "squash" && (
               <Squash
                 toggled={open}

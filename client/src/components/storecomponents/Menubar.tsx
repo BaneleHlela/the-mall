@@ -11,9 +11,9 @@ interface MenubarProps {
   layoutId?: string;
 }
 
-const Menubar: React.FC<MenubarProps> = () => {
+const Menubar: React.FC<MenubarProps> = ({ layoutSettingsFrom }) => {
   const dispatch = useDispatch();
-  const layout = useSelector((state: RootState) => state.layoutSettings.menubar);
+  const layout = layoutSettingsFrom ? layoutSettingsFrom : useSelector((state: RootState) => state.layoutSettings.menubar);
   const currentStore = useSelector((state: RootState) => state.stores.currentStore);
   const [linkItems, setLinkItems] = useState<string[]>(["Home", "About", "Services", "Products"]);
   const [open, setOpen] = useState<boolean>(false);
@@ -61,9 +61,10 @@ const Menubar: React.FC<MenubarProps> = () => {
         ...getBackgroundStyles(layout?.background),
         ...getBorderStyles(layout?.background?.border),
       }}
-      className={`flex ${layout?.isSticky ? 'sticky top-0' : 'relative'} 
+      className={`flex ${layout?.isSticky ? 'sticky' : 'relative'} 
       items-center justify-between z-50`}
     >
+      
       {layout?.layoutStyle?.map((item) => renderComponent(item))}
       <MobileMenu open={open} toggleMenu={toggleMenu} linkItems={linkItems} layout={layout} />
     </nav>
