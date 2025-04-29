@@ -1,5 +1,5 @@
 import React from 'react';
-import TextEditor from "./TextEditor.tsx";
+import TextEditor from "./components/text/TextEditor.tsx";
 import BackgroundEditor from "./components/background/BackgroundEditor.tsx";
 import SpecialLinksSettings from "./SpecialLinksSettings.tsx";
 import {useDispatch, useSelector} from "react-redux";

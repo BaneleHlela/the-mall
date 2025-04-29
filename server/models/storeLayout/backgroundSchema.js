@@ -69,6 +69,7 @@ const backgroundSchema = {
     size: { type: String, enum: ["auto", "cover", "contain"], default: "cover" },
     position: { type: String, default: "center" },
     repeat: { type: String, enum: ["no-repeat", "repeat", "repeat-x", "repeat-y"], default: "no-repeat" },
+    attachment: { type: String, enum: ["scroll", "fixed", "local"], default: "scroll" }
   },
   gradient: {
     enabled: { type: Boolean, default: false },

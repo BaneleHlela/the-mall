@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import TextEditor from "./TextEditor.tsx";
+import TextEditor from "./components/text/TextEditor.tsx";
 import BackgroundEditor from "./components/background/BackgroundEditor.tsx";
 import { RootState } from '../../app/store.ts';
 import { updateSetting } from '../../features/layouts/layoutSettingsSlice.ts';

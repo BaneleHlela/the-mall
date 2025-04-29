@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import BackgroundEditor from './components/background/BackgroundEditor.tsx'; // Adjust the path as needed
-import TextEditor from './TextEditor';
+import TextEditor from './components/text/TextEditor.tsx';
 import { updateSetting } from '../../features/layouts/layoutSettingsSlice.ts';
 import { RootState } from '../../app/store.ts';
 import UploadLogo from '../UploadLogo.tsx';

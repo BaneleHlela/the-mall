@@ -53,7 +53,7 @@ const storeService = {
       });
 
       // Return the logo URL from the response
-      return response.data.logoUrl;
+      return response.data.url;
     } catch (error) {
       console.error('Error uploading store logo:', error);
       throw new Error('Failed to upload store logo');

@@ -49,7 +49,6 @@ const validDisplayTypes = [
       },
     },
     flex: {
-      enabled: { type: Boolean, default: false },
       direction: {
         type: String,
         enum: validFlexDirections,
@@ -73,7 +72,6 @@ const validDisplayTypes = [
       gap: { type: String, default: "0" },
     },
     grid: {
-      enabled: { type: Boolean, default: false },
       templateColumns: { type: String, default: "" }, // e.g. "1fr 1fr"
       templateRows: { type: String, default: "" },
       gap: { type: String, default: "0" },

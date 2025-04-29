@@ -166,12 +166,12 @@ const storeSlice = createSlice({
         state.isLoading = false;
         const logoUrl = action.payload;
         const storeId = action.meta.arg.storeId;
-        const store = state.stores.find((s) => s.id === storeId);
+        const store = state.stores.find((s) => s._id === storeId);
         if (store) {
-          store.logoUrl = logoUrl;
+          store.logo.url = logoUrl;
         }
-        if (state.currentStore?.id === storeId) {
-          state.currentStore.logoUrl = logoUrl;
+        if (state.currentStore?._id === storeId) {
+          state.currentStore.logo.url= logoUrl;
         }
       })
       .addCase(uploadStoreLogo.rejected, (state, action) => {

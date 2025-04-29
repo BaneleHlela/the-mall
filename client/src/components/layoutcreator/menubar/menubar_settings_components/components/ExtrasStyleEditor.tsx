@@ -3,7 +3,7 @@ import { ChevronDownIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { useDrop, useDrag, DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import BackgroundEditor from "../../../components/background/BackgroundEditor";
-import TextEditor from "../../../TextEditor";
+import TextEditor from "../../../components/text/TextEditor";
 
 const availableSocialIcons = ["facebook", "x", "linkedin", "instagram", "medium"];
 

@@ -7,6 +7,7 @@ import BorderEditor from "./BorderEditor.tsx";
 import PaddingEditor from "./PaddingEditor.tsx";
 import MarginEditor from "./MarginEditor.tsx";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import BackgroundImageEditor from "./BackgroundImageEditor.tsx";
 
 interface BackgroundEditorProps {
   objectPath: string;
@@ -96,6 +97,7 @@ const BackgroundEditor: React.FC<BackgroundEditorProps> = ({
           {[
             { label: "Position", component: <PositionEditor settings={settings} objectPath={objectPath} /> },
             { label: "Border", component: <BorderEditor settings={settings} objectPath={objectPath} handleSettingChange={handleSettingChange} /> },
+            { label: "Background Image", component: <BackgroundImageEditor settings={settings} objectPath={objectPath} /> },
             { label: "Padding", component: <PaddingEditor settings={settings} objectPath={objectPath}handleSettingChange={handleSettingChange} /> },
             { label: "Margin", component: <MarginEditor settings={settings} objectPath={objectPath} handleSettingChange={handleSettingChange} /> },
             { label: "Shadow", component: <ShadowEditor settings={settings} objectPath={objectPath} /> },

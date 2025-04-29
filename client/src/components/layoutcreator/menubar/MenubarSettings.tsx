@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import BackgroundEditor from '../components/background/BackgroundEditor';
-import TextEditor from '../TextEditor';
+import TextEditor from '../components/text/TextEditor';
 import MenubarExtrasEditor from '../MenubarExtrasEditor';
 import LogoDisplaySettings from '../LogoDisplaySettings';
 import LinksSettings from '../LinksSettings';

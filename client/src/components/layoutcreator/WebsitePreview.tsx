@@ -27,7 +27,7 @@ const WebsitePreview = () => {
   return (
     <div>
       {/* render your layout using layoutSettings from Redux */}
-      {/* <Menubar layoutSettingsFrom={layoutSettings}/> */}
+      <Menubar layoutSettingsFrom={layoutSettings}/>
       <RecursiveRenderer settings={layoutSettings.pages.welcome} />
       <p>Hey, I am the DynamicDiv</p>
     </div>

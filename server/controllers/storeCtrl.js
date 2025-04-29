@@ -1,11 +1,8 @@
 import expressAsyncHandler from 'express-async-handler';
 import { Store } from '../models/storeModel.js';
-import bucket from '../config/gcsClient.js';
 import { Storage} from "@google-cloud/storage";
+import { uploadToUploads } from '../config/gcsClient.js';
 
-
-const storage = new Storage();
-const bucketName = 'banele_first_bucket';
 
 // Add a new store
 export const addStore = expressAsyncHandler(async (req, res) => {
@@ -132,59 +129,50 @@ async function deleteOldLogo(filePath) {
   }
 }
 
-
-// Upload store logo
+// uploadStoreLogo
 export const uploadStoreLogo = expressAsyncHandler(async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: 'No file uploaded' });
   }
 
-  // Find the store by ID
   const store = await Store.findById(req.params.storeId);
   if (!store) {
     return res.status(404).json({ message: 'Store not found' });
   }
 
-  // Delete the old logo if it exists
-  if (store.logoUrl) {
-    const oldFilePath = store.logoUrl.split(`${bucket.name}/`)[1]; // Extract the path after the bucket name
+  // Delete old logo if exists
+  if (store.logo.url) {
+    const oldFilePath = store.logo.url.split(`${uploadsBucket.name}/`)[1]; // Use store.logo.url to get the path
     try {
-      await bucket.file(oldFilePath).delete();
+      await uploadsBucket.file(oldFilePath).delete();
       console.log(`Old logo deleted: ${oldFilePath}`);
     } catch (error) {
       console.error(`Error deleting old logo: ${error.message}`);
     }
   }
 
-  // Upload the new logo
-  const blob = bucket.file(`logos/${Date.now()}_${req.file.originalname}`);
-  const blobStream = blob.createWriteStream({
-    resumable: false,
-    contentType: req.file.mimetype,
-  });
+  // Upload new logo
+  const fileName = `stores/${store._id}/logo/${Date.now()}_${req.file.originalname}`;
 
-  blobStream.on('finish', async () => {
-    const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
-    store.logo.url = publicUrl;
+  try {
+    await uploadToUploads(req.file.buffer, fileName);
+  } catch (error) {
+    console.error('Error uploading store logo:', error);
+    return res.status(500).json({ message: 'Failed to upload store logo' });
+  }
 
-    // Save the logo URL to the available layouts if any
-    /*if (store.layouts && Array.isArray(store.layouts)) {
-        store.layouts.forEach(layout => {
-            if (layout.menubar && layout.menubar.logo) {
-                layout.menubar.logo.url = publicUrl;
-            }
-        });
-        console.log("logo recieved")
-    }*/
+  const publicUrl = `https://storage.googleapis.com/${uploadsBucket.name}/${fileName}`;
+  console.log("public url ", publicUrl);
 
-    await store.save();
+  // Save new logo URL in the database
+  store.logo.url = publicUrl;
 
-    res.status(200).json({ message: 'Logo uploaded successfully', url: publicUrl });
-  });
+  await store.save();
 
-
-  blobStream.end(req.file.buffer);
+  res.status(200).json({ message: 'Logo uploaded successfully', url: publicUrl });
 });
+
+
 
 
 // Delete store logo

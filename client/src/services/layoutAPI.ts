@@ -20,3 +20,17 @@ export const updateLayout = async (layoutId: string, layoutConfig: Layout): Prom
 export const deleteLayout = async (layoutId: string): Promise<void> => {
   await axios.delete(`${API_URL}/api/layouts/${layoutId}`);
 };
+
+export const uploadLayoutImage = async (layoutId: string, file: File, fileName?: string) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  if (fileName) formData.append("fileName", fileName);
+
+  const response = await axios.post(`${API_URL}/api/layouts/upload/${layoutId}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return response.data; 
+};

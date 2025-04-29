@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Menubar } from "../../types/layoutTypes"; // Update the path as necessary
-import defaultMenubarConfig from "../../utils/default_layout/defaultMenubarConfig.ts";
 import defaultLayoutConfig from '../../utils/default_layout/defaultLayoutConfig.ts';
 
 interface LayoutSettingsState {

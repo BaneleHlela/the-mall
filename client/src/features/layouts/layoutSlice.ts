@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Layout, LayoutState } from "../../types/layoutTypes";
-import { deleteLayout, fetchLayout, saveLayout, updateLayout } from "../../services/layoutAPI";
+import { deleteLayout, fetchLayout, saveLayout, updateLayout, uploadLayoutImage } from "../../services/layoutAPI";
 import {RootState} from "../../app/store.ts";
 
 const initialState: LayoutState = {
@@ -27,6 +27,27 @@ export const removeLayout = createAsyncThunk('layouts/removeLayout', async (layo
     await deleteLayout(layoutId);
     return layoutId; // Return the ID for deletion
 });
+
+// New thunk for uploading image
+export const uploadLayoutImageThunk = createAsyncThunk(
+    'layouts/uploadLayoutImage',
+    async ({ layoutId, file, fileName }: { layoutId: string; file: File; fileName?: string }) => {
+      return await uploadLayoutImage(layoutId, file, fileName);
+    }
+);  
+
+// Update layout with image, using the response from the backend
+export const updateLayoutWithImage = createAsyncThunk(
+    "layouts/updateLayoutWithImage",
+    async ({ objectPath, file }: { objectPath: string; file: File }) => {
+      const response = await uploadLayoutImage(objectPath, file); // Assuming response contains { url }
+      return {
+        objectPath,
+        fileUrl: response.url, // 'url' comes from backend response
+      };
+    }
+  );
+  
 
 const layoutSlice = createSlice({
     name: "layout",
@@ -94,6 +115,44 @@ const layoutSlice = createSlice({
                 state.status = "failed";
                 state.error = action.error.message || "Failed to delete layout";
             })
+            // Upload Layout Image
+            .addCase(uploadLayoutImageThunk.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(uploadLayoutImageThunk.fulfilled, (state, action: PayloadAction<Layout>) => {
+                state.status = "succeeded";
+                const index = state.layouts.findIndex(layout => layout._id === action.payload._id);
+                if (index >= 0) {
+                state.layouts[index] = action.payload; // update the layout with the new image
+                }
+                if (state.activeLayout?._id === action.payload._id) {
+                state.activeLayout = action.payload; // also update activeLayout if it's the same
+                }
+            })
+            .addCase(uploadLayoutImageThunk.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.error.message || "Failed to upload image";
+            })
+            .addCase(updateLayoutWithImage.fulfilled, (state, action) => {
+                const { objectPath, fileUrl } = action.payload;
+                
+                // Assuming the objectPath is like "pages.welcome.mobile.divs.0.images.0"
+                const pathArray = objectPath.split('.'); // ["pages", "welcome", "mobile", "divs", "0", "images", "0"]
+                let target = state; // Start at the root state object
+              
+                // Traverse the state object according to the pathArray
+                for (let i = 0; i < pathArray.length - 1; i++) {
+                  target = target[pathArray[i]]; // Traverse each level
+                }
+              
+                const lastKey = pathArray[pathArray.length - 1]; // The final key is '0' for the image
+                target[lastKey] = fileUrl; // Update the final target (image URL)
+              
+                // Optionally: If needed, update the activeLayout with the new layout (if it's affected)
+                if (state.activeLayout) {
+                  state.activeLayout = { ...state.activeLayout }; // Force re-render by copying the activeLayout
+                }
+              });               
     },
 });
 

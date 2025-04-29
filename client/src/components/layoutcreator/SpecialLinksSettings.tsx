@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import BackgroundEditor from "./components/background/BackgroundEditor.tsx";
-import TextEditor from "./TextEditor.tsx";
+import TextEditor from "./components/text/TextEditor.tsx";
 import { RootState } from '../../app/store.ts';
 import { updateSetting } from '../../features/layouts/layoutSettingsSlice.ts';
 import { getBackgroundStyles } from '../../utils/stylingFunctions.ts';

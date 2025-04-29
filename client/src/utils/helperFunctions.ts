@@ -60,3 +60,10 @@ export const parseSetting = (
 };
 
 
+export const getAnimationClass = (styleSection: any) => {
+  return styleSection?.text?.animationType && styleSection?.text?.animationType !== 'none'
+    ? styleSection.text.animationType
+    : '';
+};
+
+

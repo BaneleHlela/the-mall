@@ -1,6 +1,5 @@
 import multer from 'multer';
 
 const storage = multer.memoryStorage();
-const uploadMiddleware = multer({ storage });
 
-export default uploadMiddleware.single('logo');
+export const uploadSingleFile = (fieldName) => multer({ storage }).single(fieldName);

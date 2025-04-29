@@ -1,4 +1,5 @@
-import { getBackgroundStyles, getTextStyles } from "../../../utils/stylingFunctions";
+import { getAnimationClass } from "../../../utils/helperFunctions";
+import { getBackgroundStyles, getDisplayStyles, getTextStyles } from "../../../utils/stylingFunctions";
 
 interface RecursiveRendererProps {
   settings: any;
@@ -6,16 +7,15 @@ interface RecursiveRendererProps {
 
 const RecursiveRenderer = ({ settings }: RecursiveRendererProps) => {
   if (!settings) return null;
-
   const renderByDevice = (device: "mobile" | "tablet" | "desktop", className: string) => {
     const current = settings[device];
+    console.log(current?.display)
     if (!current) return null;
-
     return (
       <div
-        className={className}
+      className={`${className} ${getAnimationClass(current.animation || '')}`}
         style={{
-          ...current.display,
+          ...getDisplayStyles(current.display),
           ...getBackgroundStyles(current.background),
           ...getTextStyles(current.text),
         }}
@@ -29,6 +29,7 @@ const RecursiveRenderer = ({ settings }: RecursiveRendererProps) => {
               ...getBackgroundStyles(textObj?.background),
               ...getTextStyles(textObj?.text),
             }}
+            className={`${textObj.text?.animation}`}
           >
             {textObj?.text?.input || "Sample Text"}
           </p>

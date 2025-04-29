@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import BackgroundEditor from "../../components/background/BackgroundEditor";
-import TextEditor from "../../TextEditor";
+import TextEditor from "../../components/text/TextEditor";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import LinksStyleEditor from "./components/LinksStyleEditor";
 import ExtrasStyleEditor from "./components/ExtrasStyleEditor";

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import BackgroundEditor from "../../../components/background/BackgroundEditor";
-import TextEditor from "../../../TextEditor";
+import TextEditor from "../../../components/text/TextEditor";
 
 
 interface LinksStyleEditorProps {

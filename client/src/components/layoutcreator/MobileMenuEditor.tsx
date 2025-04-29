@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import BackgroundEditor from "./components/background/BackgroundEditor.tsx";
-import TextEditor from "./TextEditor";
+import TextEditor from "./components/text/TextEditor.tsx";
 import TransitionDropdown from "./TransitionDropdown";
 import { RootState } from "../../app/store.ts";
 import { updateSetting } from "../../features/layouts/layoutSettingsSlice.ts";

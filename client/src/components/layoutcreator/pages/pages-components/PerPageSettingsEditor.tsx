@@ -7,7 +7,8 @@ import AddItemDropdown from "../../components/AddItemDropDown";
 import BackgroundEditor from "../../components/background/BackgroundEditor";
 import DisplayEditor from "../../components/display/DisplayEditor";
 import DivEditor from "../../DivEditor";
-import TextEditor from "../../TextEditor";
+import TextEditor from "../../components/text/TextEditor";
+import ButtonEditor from "../../components/ButtonEditor";
 
 
 const PerPageSettings = () => {
@@ -109,15 +110,13 @@ const PerPageSettings = () => {
                             ))}
 
                             {/* === Render Button Editors === */}
-                            {(pages[pageKey][device]?.buttons || []).map((_, index) => (
-                            <div key={`button-${index}`} className="border p-2 rounded bg-white">
-                                <p className="text-xs font-medium text-gray-500 mb-1">Button {index}</p>
-                                <BackgroundEditor
-                                objectPath={`pages.${pageKey}.${device}.buttons.${index}.background`}
-                                settings={pages[pageKey][device]?.buttons?.[index]?.background || {}}
+                            {(pages[pageKey][device]?.buttons || []).map((btn, i) => (
+                              <ButtonEditor
+                                key={`button-${i}`}
+                                objectPath={`pages.${pageKey}.${device}.buttons.${i}`}
+                                settings={btn}
                                 handleSettingChange={handleSettingChange}
-                                />
-                            </div>
+                              />
                             ))}
                              {/* === Render Div Editors === */}
                             {(pages[pageKey][device]?.divs || []).map((div, index) => (

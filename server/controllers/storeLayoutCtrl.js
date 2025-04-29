@@ -1,5 +1,6 @@
 import Layout from '../models/storeLayout/storeLayout.js';
 import expressAsyncHandler from 'express-async-handler';
+import { uploadToUploads } from '../config/gcsClient.js';
 
 // create a new layouts configuration
 export const createLayoutConfig = async (req, res) => {
@@ -65,3 +66,22 @@ export const deleteLayoutConfig = expressAsyncHandler(async (req, res) => {
     res.json({ message: "Layout configuration deleted successfully." });
 });
 
+
+// Upload layout image
+export const uploadLayoutImage = async (req, res) => {
+  try {
+    const { objectPath } = req.body; // Expect objectPath to be passed in the body
+    const file = req.file;
+    const fileName = req.body.fileName || file.originalname; // You can use the original name if no fileName is provided
+
+    const destination = `${objectPath}/${fileName}`;  // Use objectPath from frontend and add the filename
+    await uploadToUploads(file.buffer, destination);  // Upload to Google Cloud
+
+    const publicUrl = `https://storage.googleapis.com/the-mall-uploads-giza69/${destination}`;
+
+    res.status(200).json({ message: "Uploaded successfully", url: publicUrl });
+  } catch (error) {
+    console.error("Upload error:", error);
+    res.status(500).json({ message: "Failed to upload image" });
+  }
+};

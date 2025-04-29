@@ -185,6 +185,7 @@ export const getTextStyles = (text) => {
 
   const styles: any = {};
 
+  // Text styles
   if (text.color) styles.color = text.color;
   if (text.weight) styles.fontWeight = text.weight;
   if (text.fontSize) styles.fontSize = text.fontSize;
@@ -202,8 +203,17 @@ export const getTextStyles = (text) => {
     styles.backgroundColor = 'transparent';
   }
 
+  // Animation styles
+  if (text.animationType && text.animationType !== 'none') {
+    // We assume you have matching animation classes like fade-in-left, slide-in, etc.
+    styles.animationDuration = text.animationDuration || '2s';
+    styles.animationDelay = text.animationDelay || '0s';
+    styles.animationIterationCount = text.animationIteration || '1';
+  }
+
   return styles;
 };
+
 
 export const getInheritedTextStyles = (textChild, textParent) => {
   const text = textChild && Object.keys(textChild).length ? textChild : textParent;
@@ -227,6 +237,40 @@ export const getInheritedTextStyles = (textChild, textParent) => {
     styles.backgroundColor = text.backgroundColor;
   } else {
     styles.backgroundColor = 'transparent';
+  }
+
+  return styles;
+};
+
+
+export const getDisplayStyles = (display: any) => {
+  if (!display) return {};
+
+  const styles: Record<string, any> = {
+    display: display.display || "block",
+    visibility: display.visibility || "visible",
+    overflowX: display.overflow?.x || "visible",
+    overflowY: display.overflow?.y || "visible",
+    float: display.float || "none",
+    clear: display.clear || "none",
+    order: display.order ?? 0,
+  };
+
+  if (display.display?.includes("flex")) {
+    styles.flexDirection = display.flex?.direction || "row";
+    styles.justifyContent = display.flex?.justifyContent || "flex-start";
+    styles.alignItems = display.flex?.alignItems || "stretch";
+    styles.flexWrap = display.flex?.wrap || "nowrap";
+    styles.gap = display.flex?.gap || "0";
+  }
+
+  if (display.display?.includes("grid")) {
+    styles.gridTemplateColumns = display.grid?.templateColumns || "";
+    styles.gridTemplateRows = display.grid?.templateRows || "";
+    styles.gap = display.grid?.gap || "0"; // grid gap can override flex gap if grid
+    styles.rowGap = display.grid?.rowGap || "";
+    styles.columnGap = display.grid?.columnGap || "";
+    styles.gridAutoFlow = display.grid?.autoFlow || "row";
   }
 
   return styles;

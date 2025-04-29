@@ -29,7 +29,6 @@ const UploadLogo: React.FC = () => {
     if (!store?._id) return alert("Store ID missing.");
 
     dispatch(uploadStoreLogo({ storeId: store._id, logoFile: selectedFile }));
-    alert("Logo uploaded successfully!");
     setSelectedFile(null);
   };
 

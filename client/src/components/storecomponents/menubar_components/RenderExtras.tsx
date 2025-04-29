@@ -4,12 +4,15 @@ import { Squash, Squeeze, Sling, Rotate } from "hamburger-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store.ts";
 import DynamicIcon from "../../layoutcreator/components/DynamicIcon.tsx";
+import { getAnimationClass } from "../../../utils/helperFunctions.ts";
 
 interface RenderExtrasProps {
   layout: any;
   open: boolean;
   toggleMenu: () => void;
 }
+
+
 
 const RenderExtras: React.FC<RenderExtrasProps> = ({ open, toggleMenu }) => {
   const menubar = useSelector((state: RootState) => state.layoutSettings.menubar);
@@ -33,7 +36,7 @@ const RenderExtras: React.FC<RenderExtrasProps> = ({ open, toggleMenu }) => {
               ...getBackgroundStyles(button?.style?.background),
               ...getTextStyles(button?.style?.text),
             }}
-            className="px-4 py-2 rounded-md"
+            className={`px-4 py-2 rounded-md ${getAnimationClass(button?.style)}`}
           >
             {button.icon?.display ? (
               <span className="flex items-center gap-1">
@@ -48,7 +51,7 @@ const RenderExtras: React.FC<RenderExtrasProps> = ({ open, toggleMenu }) => {
         {/* Social Icons */}
         {socialIcons?.icons?.length > 0 && (
           <div
-            className="flex gap-2"
+            className={`flex gap-2 ${getAnimationClass(socialIcons?.style)}`}
             style={{
               ...getBackgroundStyles(socialIcons?.style?.background),
             }}
@@ -73,7 +76,7 @@ const RenderExtras: React.FC<RenderExtrasProps> = ({ open, toggleMenu }) => {
 
         {/* Extra Icons */}
         {extraIcons?.enabled && extraIcons.icons?.length > 0 && (
-          <div className="flex gap-2">
+          <div className={`flex gap-2 ${getAnimationClass(extraIcons?.style)}`}>
             {extraIcons.icons.map((icon, index) => (
               <div
                 key={index}
@@ -99,9 +102,9 @@ const RenderExtras: React.FC<RenderExtrasProps> = ({ open, toggleMenu }) => {
 
       {/* Mobile */}
       <div className="flex md:hidden items-center">
-        {/* Extra Icons */}
+        {/* Mobile Extra Icons */}
         {mobileExtraIcons?.enabled && mobileExtraIcons.icons?.length > 0 && (
-          <div className="flex gap-2 items-center">
+          <div className={`flex gap-2 items-center ${getAnimationClass(mobileExtraIcons?.style)}`}>
             {mobileExtraIcons.icons.map((icon, index) => (
               <div
                 key={index}
