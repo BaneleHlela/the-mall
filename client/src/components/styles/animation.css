@@ -1,0 +1,166 @@
+/* Fade Animations */
+@keyframes fadeInLeft {
+    from { opacity: 0; transform: translateX(-50px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  
+  @keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  
+  @keyframes fadeInTop {
+    from { opacity: 0; transform: translateY(50px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes fadeInBottom {
+    from { opacity: 0; transform: translateY(-50px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Slide Animations */
+  @keyframes slideInLeft {
+    from { transform: translateX(-50%); }
+    to { transform: translateX(0); }
+  }
+  
+  @keyframes slideInRight {
+    from { transform: translateX(50%); }
+    to { transform: translateX(0); }
+  }
+  
+  @keyframes slideInTop {
+    from { transform: translateY(50%); }
+    to { transform: translateY(0); }
+  }
+  
+  @keyframes slideInBottom {
+    from { transform: translateY(-50%); }
+    to { transform: translateY(0); }
+  }
+  /* Zoom-In Animation */
+@keyframes zoomIn {
+    from {
+      transform: scale(0.5);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  /* Zoom-Out Animation */
+  @keyframes zoomOut {
+    from {
+      transform: scale(1.5);
+      opacity: .5;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  /* Apply Zoom-In and Zoom-Out Classes */
+  .zoom-in {
+    animation: zoomIn 1s ease-out forwards;
+  }
+  
+  .zoom-out {
+    animation: zoomOut 1s ease-out forwards;
+  }
+  
+  /* Typing Animation */
+.typing-container {
+    display: flex;
+    flex-direction: column; /* Stacks the text */
+  }
+  
+  .typing {
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 3px solid;
+    width: 0;
+    animation: typing 2s steps(40, end) forwards;
+    margin: 10px 0;
+  }
+  
+  @keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  /* Bounce Animation */
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+  
+  /* Rainbow Animation */
+  @keyframes rainbow {
+    0% { background-position: 0%; }
+    100% { background-position: 400%; }
+  }
+  
+  /* Apply animation classes */
+  .fade-in {
+    animation: fadeIn 2s ease-out;
+  }
+  
+  .fade-in-left {
+    animation: fadeInLeft 2s ease-out;
+  }
+  
+  .fade-in-right {
+    animation: fadeInRight 2s ease-out;
+  }
+  
+  .fade-in-top {
+    animation: fadeInTop 2s ease-out;
+  }
+  
+  .fade-in-bottom {
+    animation: fadeInBottom 2s ease-out;
+  }
+  
+  .slide-in-left {
+    animation: slideInLeft 2s ease-out;
+  }
+  
+  .slide-in-right {
+    animation: slideInRight 2s ease-out;
+  }
+  
+  .slide-in-top {
+    animation: slideInTop 2s ease-out;
+  }
+  
+  .slide-in-bottom {
+    animation: slideInBottom 2s ease-out;
+  }
+  
+  /* Bounce Class */
+  .bounce {
+    animation: bounce 2s infinite;
+  }
+  
+  /* Rainbow Class */
+  .rainbow {
+    background-image: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet);
+    background-size: 400%;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: rainbow 6s linear infinite;
+  }
+  
