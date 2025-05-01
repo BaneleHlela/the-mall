@@ -9,17 +9,26 @@ import hashToken from "../config/hashToken.js";
 import jwt from "jsonwebtoken";
 
 // Create a user
-export const createUser= expressAsyncHandler( async (req, res) => {
-  const email = req.body.email;
-  const findUser= await User.findOne( { email: email }); // Removed await
-
-  if (!findUser) {
-      const newUser =  await User.create(req.body);
+export const createUser = expressAsyncHandler(async (req, res) => {
+    const email = req.body.email;
+    const findUser = await User.findOne({ email });
+  
+    if (!findUser) {
+      const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
+      
+      const newUser = await User.create({
+        ...req.body,
+        verificationToken,
+        verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours from now
+      });
+  
       res.json(newUser);
-  } else {
-      throw new Error("User Already Exists. Please try logging in.")
-  }
-});
+    } else {
+      res.status(400);
+      throw new Error("User Already Exists. Please try logging in.");
+    }
+  });
+
 
 // Login a user
 export const loginUser = expressAsyncHandler( async (req, res) => {
@@ -30,7 +39,6 @@ export const loginUser = expressAsyncHandler( async (req, res) => {
             {email : email },
             { mobile: mobile }]
     });
-    console.log(findUser);
     if (findUser && await findUser.isPasswordMatched(password)){
         const refreshToken = await generateRefreshToken(findUser?._id);
         const updateUser = await User.findByIdAndUpdate(
@@ -44,6 +52,8 @@ export const loginUser = expressAsyncHandler( async (req, res) => {
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             maxAge: 3*24*60*60*1000,
+            sameSite: "strict",
+            secure: process.env.NODE_ENV === "production", 
         })
         res.json({
             _id: findUser?._id,

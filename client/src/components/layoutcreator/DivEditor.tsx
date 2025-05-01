@@ -76,14 +76,14 @@ const DivEditor = ({ objectPath, settings, handleSettingChange, index }: DivEdit
       ))}
 
       {/* Render ImageEditors */}
-      {(settings?.images || []).map((img, i) => (
+      {/* {(settings?.images || []).map((img, i) => (
         <ImageEditor
           key={`image-${i}`}
           objectPath={`${objectPath}.images.${i}`}
           settings={img}
           handleSettingChange={handleSettingChange}
         />
-      ))}
+      ))} */}
 
       {/* Conditionally Render ImageEditor when visible */}
       {isImageEditorVisible && (

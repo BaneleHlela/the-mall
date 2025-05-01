@@ -68,15 +68,37 @@ export const deleteLayoutConfig = expressAsyncHandler(async (req, res) => {
 
 
 // Upload layout image
+// export const uploadLayoutImage = async (req, res) => {
+//   try {
+//     const { objectPath } = req.body; // Expect objectPath to be passed in the body
+//     const file = req.file;
+//     const fileName = req.body.fileName || file.originalname; // You can use the original name if no fileName is provided
+
+//     const destination = `${objectPath}/${fileName}`;  // Use objectPath from frontend and add the filename
+//     await uploadToUploads(file.buffer, destination);  // Upload to Google Cloud
+
+//     const publicUrl = `https://storage.googleapis.com/the-mall-uploads-giza69/${destination}`;
+
+//     res.status(200).json({ message: "Uploaded successfully", url: publicUrl });
+//   } catch (error) {
+//     console.error("Upload error:", error);
+//     res.status(500).json({ message: "Failed to upload image" });
+//   }
+// };
+
+
+// Upload layout image
 export const uploadLayoutImage = async (req, res) => {
   try {
-    const { objectPath } = req.body; // Expect objectPath to be passed in the body
+    const { layoutId } = req.params;
     const file = req.file;
-    const fileName = req.body.fileName || file.originalname; // You can use the original name if no fileName is provided
+    const fileName = req.body.fileName || file.originalname;
 
-    const destination = `${objectPath}/${fileName}`;  // Use objectPath from frontend and add the filename
-    await uploadToUploads(file.buffer, destination);  // Upload to Google Cloud
+    // Ensure correct string formatting
+    const destination = `stores/layouts/${layoutId}/${fileName}`;
+    await uploadToUploads(file.buffer, destination);
 
+    // Fix missing quotes for proper URL formatting
     const publicUrl = `https://storage.googleapis.com/the-mall-uploads-giza69/${destination}`;
 
     res.status(200).json({ message: "Uploaded successfully", url: publicUrl });

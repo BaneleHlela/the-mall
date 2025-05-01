@@ -26,13 +26,21 @@ var userSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    lastLogin: {
+        type: Date,
+        default: Date
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
     facebookId: {
         type: String,
-        unique: true
+        unique: false
     },
     googleId: {
         type: String,
-        unique: true
+        unique: false
     },
     role: {
         type:String,
@@ -58,7 +66,11 @@ var userSchema = new mongoose.Schema({
     wishlist: [{type: mongoose.Schema.Types.ObjectId, ref: "Product"}],
     refreshToken: {
         type: String,
-    }
+    },
+    resetPasswordToken: String,
+    resetPasswordExpiresAt: Date,
+    verificationToken: String,
+    verificationTokenExpiresAt: Date,
 },{
         timestamps: true
 });

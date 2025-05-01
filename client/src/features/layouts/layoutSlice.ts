@@ -38,15 +38,26 @@ export const uploadLayoutImageThunk = createAsyncThunk(
 
 // Update layout with image, using the response from the backend
 export const updateLayoutWithImage = createAsyncThunk(
-    "layouts/updateLayoutWithImage",
-    async ({ objectPath, file }: { objectPath: string; file: File }) => {
-      const response = await uploadLayoutImage(objectPath, file); // Assuming response contains { url }
-      return {
-        objectPath,
-        fileUrl: response.url, // 'url' comes from backend response
-      };
-    }
-  );
+  "layouts/updateLayoutWithImage",
+  async ({
+    layoutId,
+    objectPath,
+    file,
+    fileName,
+  }: {
+    layoutId: string;
+    objectPath: string;
+    file: File;
+    fileName?: string;
+  }) => {
+    const response = await uploadLayoutImage(layoutId, file, fileName); // correct now ✅
+    return {
+      objectPath,                // where to store in Redux
+      fileUrl: response.url,     // new image URL
+    };
+  }
+);
+
   
 
 const layoutSlice = createSlice({
