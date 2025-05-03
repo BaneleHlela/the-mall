@@ -70,13 +70,13 @@ const productSchema = new mongoose.Schema({
     ref: 'Store',
     required: true,
   },
-  owners: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
-  ],
+  // owners: [
+  //   {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: 'User',
+  //     required: true,
+  //   },
+  // ],
   isDeleted: {
     type: Boolean,
     default: false,

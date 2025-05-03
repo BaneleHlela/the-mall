@@ -46,6 +46,14 @@ const storeSchema = new mongoose.Schema(
       type:String,
       required:true
     },
+    // isBlocked: {
+    //   type: Boolean,
+    //   required: true
+    // },
+    // isPublished: {
+    //   type: Boolean,
+    //   required: true
+    // }
   },
   {
     timestamps: true,
@@ -53,3 +61,5 @@ const storeSchema = new mongoose.Schema(
 );
 
 export const Store = mongoose.model('Store', storeSchema);
+
+

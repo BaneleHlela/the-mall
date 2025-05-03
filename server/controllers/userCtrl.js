@@ -1,86 +1,156 @@
-import { User } from "../models/userModel.js";
-import expressAsyncHandler from "express-async-handler";
-import {generateToken} from "../config/jwtToken.js";
-import {generateRefreshToken} from "../config/refreshToken.js";
-/*
-import sendEmail from "../config/sendEmail.js";
-*/
-import hashToken from "../config/hashToken.js";
+import bcryptjs from "bcryptjs";
+import crypto from "crypto";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+import { body } from "express-validator";
 
-// Create a user
-export const createUser = expressAsyncHandler(async (req, res) => {
-    const email = req.body.email;
-    const findUser = await User.findOne({ email });
-  
-    if (!findUser) {
-      const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
-      
-      const newUser = await User.create({
-        ...req.body,
-        verificationToken,
-        verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours from now
-      });
-  
-      res.json(newUser);
-    } else {
-      res.status(400);
-      throw new Error("User Already Exists. Please try logging in.");
-    }
+import { User } from "../models/UserModel.js";
+import expressAsyncHandler from "express-async-handler";
+import {generateTokenAndSetCookie} from "../config/generateTokenAndSetCookie.js";
+import {
+	sendPasswordResetEmail,
+	sendResetSuccessEmail,
+	sendVerificationEmail,
+	sendWelcomeEmail,
+} from "../mailtrap/emails.js";
+
+dotenv.config();
+
+// signup
+export const signup = expressAsyncHandler(async (req, res) => {
+  const { email, password, firstName, lastName } = req.body;
+
+  const userAlreadyExists = await User.findOne({ email });
+  console.log("userAlreadyExists", userAlreadyExists);
+
+  if (userAlreadyExists) {
+    res.status(400);
+    throw new Error("User already exists");
+  }
+
+  const hashedPassword = await bcryptjs.hash(password, 10);
+  const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
+
+  const user = new User({
+    email,
+    password: hashedPassword,
+    firstName,
+    lastName,
+    verificationToken,
+    verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
   });
+
+  await user.save();
+
+  // Generate JWT and set cookie
+  generateTokenAndSetCookie(res, user._id);
+
+  // await sendVerificationEmail(user.email, verificationToken);
+
+  res.status(201).json({
+    success: true,
+    message: "User created successfully",
+    user: {
+      ...user._doc,
+      password: undefined,
+    },
+  });
+
+  // Exclude "verificationToken" as res
+});
+
 
 
 // Login a user
-export const loginUser = expressAsyncHandler( async (req, res) => {
-    const { mobile, email , password } = req.body;
-    // Check if user exists or not
-    const findUser= await User.findOne({
-        $or: [
-            {email : email },
-            { mobile: mobile }]
-    });
-    if (findUser && await findUser.isPasswordMatched(password)){
-        const refreshToken = await generateRefreshToken(findUser?._id);
-        const updateUser = await User.findByIdAndUpdate(
-            findUser?._id,
-            {
-                refreshToken: refreshToken,
-            },
-            {
-                new: true
-        });
-        res.cookie("refreshToken", refreshToken, {
-            httpOnly: true,
-            maxAge: 3*24*60*60*1000,
-            sameSite: "strict",
-            secure: process.env.NODE_ENV === "production", 
-        })
-        res.json({
-            _id: findUser?._id,
-            firstname: findUser?.firstname,
-            lastname: findUser?.lastname,
-            email: findUser?.email,
-            mobile: findUser?.mobile,
-            token: generateToken(findUser?._id)
-        })
-    }else {
-        throw new Error("Invalid credentials.")
+export const login = expressAsyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+  
+    const user = await User.findOne({ email });
+    if (!user) {
+      res.status(400);
+      throw new Error("Invalid credentials");
     }
+  
+    const isPasswordValid = await bcryptjs.compare(password, user.password);
+    if (!isPasswordValid) {
+      res.status(400);
+      throw new Error("Invalid credentials");
+    }
+  
+    generateTokenAndSetCookie(res, user._id);
+  
+    user.lastLogin = new Date();
+    await user.save();
+  
+    res.status(200).json({
+      success: true,
+      message: "Logged in successfully",
+      user: {
+        ...user._doc,
+        password: undefined,
+      },
+    });
 });
 
-export const handleRefreshToken = expressAsyncHandler( async (req, res) => {
-    const cookie = req.cookies;
-    if (!cookie?.refreshToken) throw new Error("No Refresh Token in Cookies");
-    const refreshToken = cookie.refreshToken;
-    console.log(refreshToken);
-    const user = await User.findOne({ refreshToken })
-    jwt.verify(refreshToken, process.env.JWT_SECRET, (err, decoded) => {
-        if (err || user.id !== decoded.id) {
-            throw new Error("No refresh token present in the database or not matched")
-        }
-        const accessToken = generateToken(user._id)
-        res.json({ accessToken })
-    });
+// logout a user
+export const logout = expressAsyncHandler( async (req, res) => {
+	res.clearCookie("token");
+	res.status(200).json({ success: true, message: "Logged out successfully" });
+});
+
+
+// forgot password
+export const forgotPassword = expressAsyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    res.status(400);
+    throw new Error("User not found");
+  }
+
+  // Generate reset token
+  const resetToken = crypto.randomBytes(20).toString("hex");
+  const resetTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000; // 1 hour
+
+  user.resetPasswordToken = resetToken;
+  user.resetPasswordExpiresAt = resetTokenExpiresAt;
+
+  await user.save();
+
+  // Send email with reset link
+  await sendPasswordResetEmail(user.email, `${process.env.CLIENT_URL}/reset-password/${resetToken}`);
+
+  res.status(200).json({ success: true, message: "Password reset link sent to your email" });
+});
+
+// reset password
+export const resetPassword = expressAsyncHandler(async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  const user = await User.findOne({
+    resetPasswordToken: token,
+    resetPasswordExpiresAt: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    res.status(400);
+    throw new Error("Invalid or expired reset token");
+  }
+
+  // Update password
+  const hashedPassword = await bcryptjs.hash(password, 10);
+
+  user.password = hashedPassword;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpiresAt = undefined;
+  await user.save();
+
+  await sendResetSuccessEmail(user.email);
+
+  res.status(200).json({ success: true, message: "Password reset successful" });
 });
 
 // Get all users
@@ -105,7 +175,6 @@ export const getAUser = expressAsyncHandler( async (req, res) => {
     }
 );
 
-
 // Delete a single user
 export const deleteAUser = expressAsyncHandler( async (req, res) => {
         const { id } = req.params;
@@ -120,7 +189,6 @@ export const deleteAUser = expressAsyncHandler( async (req, res) => {
 );
 
 // Update a user
-
 export const updateUser = expressAsyncHandler( async (req, res) => {
     const { _id } = req.user;
     try {
@@ -170,31 +238,6 @@ export const unblockUser = expressAsyncHandler(async (req, res) => {
     res.status(200).json({ message: "User unblocked successfully", user });
 });
 
-// logout a user
-
-export const logoutUser = expressAsyncHandler( async (req, res) => {
-    const cookie = req.cookies;
-    if (!cookie?.refreshToken)
-        throw new Error("No Refresh Token in Cookies");
-    const refreshToken = cookie.refreshToken;
-    const user = await User.findOne({ refreshToken });
-    if (!user) {
-        res.clearCookie("refreshToken", {
-            httpOnly: true,
-            secure: true,
-        });
-        return res.sendStatus(204); // no content
-    }
-    await User.findOneAndUpdate( { refreshToken }, {
-        refreshToken: "",
-    });
-    res.clearCookie("refreshToken", {
-        httpOnly: true,
-        secure: true,
-    });
-    res.sendStatus(204);
-});
-
 // user login status
 export const userLoginStatus = expressAsyncHandler(async (req, res) => {
   const token = req.cookies.token;
@@ -215,58 +258,61 @@ export const userLoginStatus = expressAsyncHandler(async (req, res) => {
 
 // email verification
 export const verifyEmail = expressAsyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
+  const { code } = req.body;
 
-  // if user exists
+  const user = await User.findOne({
+    verificationToken: code,
+    verificationTokenExpiresAt: { $gt: Date.now() },
+  });
+
   if (!user) {
-    return res.status(404).json({ message: "User not found" });
+    res.status(400);
+    throw new Error("Invalid or expired verification code");
   }
 
-  // check if user is already verified
-  if (user.isVerified) {
-    return res.status(400).json({ message: "User is already verified" });
-  }
+  user.isVerified = true;
+  user.verificationToken = undefined;
+  user.verificationTokenExpiresAt = undefined;
+  await user.save();
 
-  let token = await Token.findOne({ userId: user._id });
+  // await sendWelcomeEmail(user.email, user.name);
 
-  // if token exists --> delete the token
-  if (token) {
-    await token.deleteOne();
-  }
-
-  // create a verification token using the user id --->
-  const verificationToken = crypto.randomBytes(64).toString("hex") + user._id;
-
-  // hast the verification token
-  const hashedToken = hashToken(verificationToken);
-
-  await new Token({
-    userId: user._id,
-    verificationToken: hashedToken,
-    createdAt: Date.now(),
-    expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
-  }).save();
-
-  // verification link
-  const verificationLink = `${process.env.CLIENT_URL}/verify-email/${verificationToken}`;
-
-  // send email
-  const subject = "Email Verification - AuthKit";
-  const send_to = user.email;
-  const reply_to = "noreply@gmail.com";
-  const template = "emailVerification";
-  const send_from = process.env.USER_EMAIL;
-  const name = user.name;
-  const url = verificationLink;
-
-  try {
-    // order matters ---> subject, send_to, send_from, reply_to, template, name, url
-    await sendEmail(subject, send_to, send_from, reply_to, template, name, url);
-    return res.json({ message: "Email sent" });
-  } catch (error) {
-    console.log("Error sending email: ", error);
-    return res.status(500).json({ message: "Email could not be sent" });
-  }
+  res.status(200).json({
+    success: true,
+    message: "Email verified successfully",
+    user: {
+      ...user._doc,
+      password: undefined,
+    },
+  });
 });
 
+// check auth
+export const checkAuth = expressAsyncHandler(async (req, res) => {
+  const user = await User.findById(req.userId).select("-password");
+
+  if (!user) {
+    res.status(400);
+    throw new Error("User not found");
+  }
+
+  res.status(200).json({ success: true, user });
+});
+
+
+// handle refesh token
+export const handleRefreshToken = expressAsyncHandler( async (req, res) => {
+  const cookie = req.cookies;
+  if (!cookie?.refreshToken) throw new Error("No Refresh Token in Cookies");
+  const refreshToken = cookie.refreshToken;
+  console.log(refreshToken);
+  const user = await User.findOne({ refreshToken })
+  jwt.verify(refreshToken, process.env.JWT_SECRET, (err, decoded) => {
+      if (err || user.id !== decoded.id) {
+          throw new Error("No refresh token present in the database or not matched")
+      }
+      const accessToken = generateToken(user._id)
+      res.json({ accessToken })
+  });
+});
 

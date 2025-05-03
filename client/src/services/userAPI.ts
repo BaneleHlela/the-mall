@@ -1,7 +1,7 @@
 // services/userAPI.ts
 
 import axios from 'axios';
-import { User } from '../types/userTypes';
+import { User } from '../types/authTypes';
 
 const API_URL = '/api/users'; // Adjust according to your server setup
 

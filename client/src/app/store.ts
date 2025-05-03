@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import layoutReducer from "../features/layouts/layoutSlice";
-import userReducer from "../features/users/userSlice";
+import userReducer from "../features/users/userSlice.ts";
 import storeReducer from "../features/stores/storeSlice";
 import productReducer from "../features/products/productSlice";
 import reviewReducer from "../features/reviews/reviewSlice";

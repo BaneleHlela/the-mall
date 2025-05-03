@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Input from "../../../components/mall/authentication/components/Input";
 import { login } from "../../../features/users/userSlice";
 import { AppDispatch, RootState } from "../../../app/store";
+import SocialLoginButtons from "../../../components/mall/authentication/components/SocialLoginButtons";
 
 const LoginPage = () => {
 	const [email, setEmail] = useState("");
@@ -67,7 +68,7 @@ const LoginPage = () => {
 					</motion.button>
 				</form>
 			</div>
-
+			<SocialLoginButtons/>
 			<div className='px-8 py-4 bg-gray-900 bg-opacity-50 flex justify-center'>
 				<p className='text-sm text-gray-400'>
 					Don't have an account?{" "}
