@@ -9,7 +9,6 @@ const RecursiveRenderer = ({ settings }: RecursiveRendererProps) => {
   if (!settings) return null;
   const renderByDevice = (device: "mobile" | "tablet" | "desktop", className: string) => {
     const current = settings[device];
-    console.log(current?.display)
     if (!current) return null;
     return (
       <div

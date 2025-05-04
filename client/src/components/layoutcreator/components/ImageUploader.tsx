@@ -3,13 +3,12 @@ import { useDispatch } from "react-redux";
 import { updateLayoutWithImage } from "../../../features/layouts/layoutSlice"; // your equivalent action
 import { useSelector } from "react-redux";
 
-interface Props {
+interface ImageUploaderProps {
   objectPath: string;
-  settings: any; // Adjust type as per your settings structure
   handleSettingChange: (field: string, value: any) => void;
 }
 
-const  ImageEditor = () => {
+const ImageUploader = ({ objectPath, handleSettingChange }: ImageUploaderProps) => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null); // To handle error messages
@@ -32,16 +31,16 @@ const  ImageEditor = () => {
         const action = await dispatch(
           updateLayoutWithImage({
             layoutId,
+            objectPath,
             file: imageFile,
           })
         );
         const uploadedImage = action.payload;
-        console.log(uploadedImage)
-        // if (uploadedImage) {
-        //   handleSettingChange(objectPath, uploadedImage.fileUrl );
-        // } else {
-        //   setError("Failed to upload image. Please try again.");
-        // }
+        if (uploadedImage) {
+          handleSettingChange(`${objectPath}.url`, uploadedImage.fileUrl );
+        } else {
+          setError("Failed to upload image. Please try again.");
+        }
       } catch (error) {
         setError("An error occurred while uploading the image.");
         console.error(error);
@@ -66,4 +65,4 @@ const  ImageEditor = () => {
   );
 };
 
-export default ImageEditor;
+export default ImageUploader;

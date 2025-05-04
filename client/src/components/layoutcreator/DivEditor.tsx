@@ -4,7 +4,7 @@ import BackgroundEditor from "./components/background/BackgroundEditor";
 import TextEditor from "./components/text/TextEditor";
 import ButtonEditor from "./components/ButtonEditor";
 import { useSelector } from "react-redux";
-import ImageEditor from "./components/ImageEditor";
+import ImageUploader from "./components/ImageUploader";
 
 interface DivEditorProps {
   objectPath: string;
@@ -22,7 +22,7 @@ interface DivEditorProps {
 
 const DivEditor = ({ objectPath, settings, handleSettingChange, index }: DivEditorProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [isImageEditorVisible, setImageEditorVisible] = useState(false); // State to control ImageEditor visibility
+  const [isImageUploaderVisible, setImageUploaderVisible] = useState(false); // State to control ImageUploader visibility
   const itemOptions = ["text", "button", "div", "image"]; // Added "image" option
   const layoutId = useSelector((state: any) => state.layoutSettings._id);
   const handleAddItem = (type: string) => {
@@ -33,9 +33,9 @@ const DivEditor = ({ objectPath, settings, handleSettingChange, index }: DivEdit
     handleSettingChange(newPath, updatedItems);
     setDropdownOpen(false);
     
-    // If an image is being added, show the ImageEditor
+    // If an image is being added, show the ImageUploader
     if (type === "image") {
-      setImageEditorVisible(true);
+      setImageUploaderVisible(true);
     }
   };
 
@@ -75,9 +75,9 @@ const DivEditor = ({ objectPath, settings, handleSettingChange, index }: DivEdit
         />
       ))}
 
-      {/* Render ImageEditors */}
+      {/* Render ImageUploaders */}
       {/* {(settings?.images || []).map((img, i) => (
-        <ImageEditor
+        <ImageUploader
           key={`image-${i}`}
           objectPath={`${objectPath}.images.${i}`}
           settings={img}
@@ -85,11 +85,10 @@ const DivEditor = ({ objectPath, settings, handleSettingChange, index }: DivEdit
         />
       ))} */}
 
-      {/* Conditionally Render ImageEditor when visible */}
-      {isImageEditorVisible && (
-        <ImageEditor
+      {/* Conditionally Render ImageUploader when visible */}
+      {isImageUploaderVisible && (
+        <ImageUploader
           objectPath={`${objectPath}.images.${settings?.images?.length || 0}`}
-          settings={{}}
           handleSettingChange={handleSettingChange}
         />
       )}

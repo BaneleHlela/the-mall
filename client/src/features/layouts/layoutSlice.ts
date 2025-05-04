@@ -38,25 +38,26 @@ export const uploadLayoutImageThunk = createAsyncThunk(
 
 // Update layout with image, using the response from the backend
 export const updateLayoutWithImage = createAsyncThunk(
-  "layouts/updateLayoutWithImage",
-  async ({
+"layouts/updateLayoutWithImage",
+async ({
     layoutId,
-    objectPath,
     file,
     fileName,
-  }: {
+    objectPath, // Add it here too
+}: {
     layoutId: string;
-    objectPath: string;
     file: File;
     fileName?: string;
-  }) => {
-    const response = await uploadLayoutImage(layoutId, file, fileName); // correct now ✅
+    objectPath: string; // Make sure this is passed
+}) => {
+    const response = await uploadLayoutImage(layoutId, file, fileName);
     return {
-      objectPath,                // where to store in Redux
-      fileUrl: response.url,     // new image URL
+    fileUrl: response.url,
+    objectPath, // ✅ Return objectPath too
     };
-  }
+}
 );
+  
 
   
 
@@ -144,26 +145,39 @@ const layoutSlice = createSlice({
                 state.status = "failed";
                 state.error = action.error.message || "Failed to upload image";
             })
+            // Update layout with image (pending, fulfilled, rejected)
+            .addCase(updateLayoutWithImage.pending, (state) => {
+                state.status = "loading";
+            })
             .addCase(updateLayoutWithImage.fulfilled, (state, action) => {
                 const { objectPath, fileUrl } = action.payload;
-                
-                // Assuming the objectPath is like "pages.welcome.mobile.divs.0.images.0"
-                const pathArray = objectPath.split('.'); // ["pages", "welcome", "mobile", "divs", "0", "images", "0"]
-                let target = state; // Start at the root state object
-              
-                // Traverse the state object according to the pathArray
-                for (let i = 0; i < pathArray.length - 1; i++) {
-                  target = target[pathArray[i]]; // Traverse each level
+                const keys = objectPath.split('.');
+                let current: any = state;
+
+                keys.forEach((key, index) => {
+                if (index === keys.length - 1) {
+                    current[key] = fileUrl; // Set the image URL at the final key
+                } else {
+                    if (!current[key]) {
+                    const nextKey = keys[index + 1];
+                    current[key] = isNaN(Number(nextKey)) ? {} : [];
+                    }
+                    current = current[key];
                 }
-              
-                const lastKey = pathArray[pathArray.length - 1]; // The final key is '0' for the image
-                target[lastKey] = fileUrl; // Update the final target (image URL)
-              
-                // Optionally: If needed, update the activeLayout with the new layout (if it's affected)
+                });
+
+                // Optional: refresh state
                 if (state.activeLayout) {
-                  state.activeLayout = { ...state.activeLayout }; // Force re-render by copying the activeLayout
+                state.activeLayout = { ...state.activeLayout };
                 }
-              });               
+
+                state.status = "succeeded";
+            })
+            .addCase(updateLayoutWithImage.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.error.message || "Failed to update layout with image";
+            });
+                        
     },
 });
 

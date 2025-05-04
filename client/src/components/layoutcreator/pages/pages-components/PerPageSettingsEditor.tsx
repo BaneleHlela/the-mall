@@ -9,7 +9,7 @@ import DisplayEditor from "../../components/display/DisplayEditor";
 import DivEditor from "../../DivEditor";
 import TextEditor from "../../components/text/TextEditor";
 import ButtonEditor from "../../components/ButtonEditor";
-import ImageEditor from "../../components/ImageEditor";
+import ImageUploader from "../../components/ImageUploader";
 
 
 const PerPageSettings = () => {
@@ -131,7 +131,7 @@ const PerPageSettings = () => {
                             ))}
                             {/* === Render Image Editors === */}
                             {(pages[pageKey][device]?.images || []).map((image, index) => (
-                              <ImageEditor
+                              <ImageUploader
                                 key={`image-${index}`}
                                 objectPath={`pages.${pageKey}.${device}.images.${index}`}
                                 settings={image}

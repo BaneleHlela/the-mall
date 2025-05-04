@@ -63,7 +63,6 @@ const DisplayEditor: React.FC<DisplayEditorProps> = ({
     </div>
   );
 
-  console.log(getSetting(`${objectPath}.display`))
 
   return (
     <div className="border border-gray-300 rounded-lg overflow-hidden">
