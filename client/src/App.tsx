@@ -16,39 +16,39 @@ const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        {/* <Route path="/*" element={<LayoutsSection />} /> */}
-        <Route
-					path='/*'
-					element={
-						<ProtectedRoute>
-							<LayoutsSection />
-						</ProtectedRoute>
-					}
-				/>
+        <Route path="/*" element={<LayoutsSection />} />
+        {/* <Route
+			path='/*'
+			element={
+				<ProtectedRoute>
+					<LayoutsSection />
+				</ProtectedRoute>
+			}
+		/> */}
         <Route path="/scribbler" element={<ScribblerComponent />} />
         <Route
-					path='/signup'
-					element={
-							<SignUpPage />
-					}
-				/>
+			path='/signup'
+			element={
+					<SignUpPage />
+			}
+		/>
         <Route
-					path='/login'
-					element={
-						<RedirectAuthenticatedUser>
-							<LoginPage />
-						</RedirectAuthenticatedUser>
-					}
-				/>
+			path='/login'
+			element={
+				<RedirectAuthenticatedUser>
+					<LoginPage />
+				</RedirectAuthenticatedUser>
+			}
+		/>
         <Route path='/verify-email' element={<EmailVerificationPage />} />
         <Route
-					path='/forgot-password'
-					element={
-						<RedirectAuthenticatedUser>
-							<ForgotPasswordPage />
-						</RedirectAuthenticatedUser>
-					}
-				/>
+			path='/forgot-password'
+			element={
+				<RedirectAuthenticatedUser>
+					<ForgotPasswordPage />
+				</RedirectAuthenticatedUser>
+			}
+		/>
         <Route
 					path='/reset-password/:token'
 					element={
