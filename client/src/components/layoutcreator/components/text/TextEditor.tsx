@@ -28,14 +28,19 @@ const TextEditor: React.FC<TextEditorProps> = ({
 
   const handleFontSelect = (font: string) => {
     handleSettingChange(`${objectPath}.fontFamily`, font);
-    const link = document.createElement("link");
-    link.href = `https://fonts.googleapis.com/css2?family=${font.replace(
-      / /g,
-      "+"
-    )}&display=swap`;
-    link.rel = "stylesheet";
-    document.head.appendChild(link);
-  };
+    
+    const fontId = `google-font-${font.replace(/ /g, "-").toLowerCase()}`;
+  
+    // Remove existing link if any
+    const existingLink = document.getElementById(fontId);
+    if (!existingLink) {
+      const link = document.createElement("link");
+      link.id = fontId;
+      link.href = `https://fonts.googleapis.com/css2?family=${font.replace(/ /g, "+")}&display=swap`;
+      link.rel = "stylesheet";
+      document.head.appendChild(link);
+    }
+  };  
 
   const handleChange =
     (field: string) =>

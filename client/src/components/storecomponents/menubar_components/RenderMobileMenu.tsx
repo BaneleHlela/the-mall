@@ -47,7 +47,14 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ linkItems, open, toggleMenu, la
       {/* Navigation Links */}
       <div>
         {linkItems.map((item, index) => (
-          <a key={index} href={`#${item}`} className="flex flex-col" onClick={toggleMenu}>
+          <a 
+            key={index}
+            style={{
+              fontFamily: menubar?.textStyle?.fontFamily,
+            }} 
+            href={`#${item}`} 
+            className="flex flex-col" 
+            onClick={toggleMenu}>
             {item}
           </a>
         ))}

@@ -5,7 +5,7 @@ const storage = new Storage({
   keyFilename: 'C:/Users/banel/Desktop/The Mall/public/the-mall-440813-25bf86cf94b3.json',
 });
 
-const uploadsBucket = storage.bucket('the-mall-uploads-giza69');
+export const uploadsBucket = storage.bucket('the-mall-uploads-giza69');
 const publicAssetsBucket = storage.bucket('the-mall-public-assets-giza69');
 const tempFilesBucket = storage.bucket('the-mall-temp-giza69');
 

@@ -165,33 +165,32 @@ const storeSlice = createSlice({
       .addCase(uploadStoreLogo.fulfilled, (state, action: PayloadAction<string, string, { arg: { storeId: string } }>) => {
         state.isLoading = false;
         const logoUrl = action.payload;
-        const storeId = action.meta.arg.storeId;
-        const store = state.stores.find((s) => s._id === storeId);
-        if (store) {
-          store.logo.url = logoUrl;
-        }
-        if (state.currentStore?._id === storeId) {
-          state.currentStore.logo.url= logoUrl;
+        if (state.currentStore && state.currentStore._id === action.meta.arg.storeId) {
+          state.currentStore.logo.url = logoUrl;
         }
       })
       .addCase(uploadStoreLogo.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Failed to upload store logo';
-      })
+      })      
       // Delete Store Logo
+      .addCase(deleteStoreLogo.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(deleteStoreLogo.fulfilled, (state, action: PayloadAction<string>) => {
+        state.isLoading = false;
         const storeId = action.payload;
-        const store = state.stores.find((s) => s.id === storeId);
-        if (store && store.logo) {
-          store.logo.url = '';
-        }
-        if (state.currentStore?.id === storeId && state.currentStore.logo) {
-          state.currentStore.logo.url = '';
+        if (state.currentStore && state.currentStore._id === storeId) {
+          if (state.currentStore.logo) {
+            state.currentStore.logo.url = '';
+          }
         }
       })
       .addCase(deleteStoreLogo.rejected, (state, action) => {
+        state.isLoading = false;
         state.error = action.error.message || 'Failed to delete store logo';
-      });
+      }) 
   },
 });
 

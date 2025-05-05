@@ -13,25 +13,26 @@ interface MenubarProps {
 
 const Menubar: React.FC<MenubarProps> = ({ layoutSettingsFrom }) => {
   const dispatch = useDispatch();
-  const layout = layoutSettingsFrom ? layoutSettingsFrom : useSelector((state: RootState) => state.layoutSettings.menubar);
+  const menubar = layoutSettingsFrom ? layoutSettingsFrom : useSelector((state: RootState) => state.layoutSettings.menubar);
   const currentStore = useSelector((state: RootState) => state.stores.currentStore);
   const [linkItems, setLinkItems] = useState<string[]>(["Home", "About", "Services", "Products"]);
   const [open, setOpen] = useState<boolean>(false);
 
   const toggleMenu = () => setOpen(prev => !prev);
 
-  const renderComponent = (type: string) => {
+  const renderComponent = (type: string, index: number) => {
     switch (type) {
       case 'logo':
-        return <div>
-          <RenderLogo key="logo" logo={currentStore?.logo} />
-        </div>;
+        return (
+          <div key={`logo-${index}`}>
+            <RenderLogo logo={currentStore?.logo} />
+          </div>
+        );
       case 'links':
         return (
-          <div className='md:hidden'>
+          <div key={`links-${index}`} className='md:hidden'>
             <RenderLinks
-              key="links"
-              menubar={layout}
+              menubar={menubar}
               linkItems={linkItems}
               open={open}
               toggleMenu={toggleMenu}
@@ -40,33 +41,35 @@ const Menubar: React.FC<MenubarProps> = ({ layoutSettingsFrom }) => {
         );
       case 'extras':
         return (
-          <div>
+          <div key={`extras-${index}`}>
             <RenderExtras
-              key="extras"
               open={open}
               toggleMenu={toggleMenu}
             />
           </div>
-          
         );
       default:
         return null;
     }
   };
-
+  
   return (
     <nav
       style={{
-        ...getTextStyles(layout?.textStyle),
-        ...getBackgroundStyles(layout?.background),
-        ...getBorderStyles(layout?.background?.border),
+        ...getTextStyles(menubar?.textStyle),
+        ...getBackgroundStyles(menubar?.background),
+        ...getBorderStyles(menubar?.background?.border),
       }}
-      className={`flex ${layout?.isSticky ? 'sticky' : 'relative'} 
-      items-center justify-between z-50`}
+      className={`flex ${menubar?.isSticky ? 'sticky' : 'relative'} 
+      items-center justify-between z-50 max-w-[100vw]`}
     >
       
-      {layout?.layoutStyle?.map((item) => renderComponent(item))}
-      <MobileMenu open={open} toggleMenu={toggleMenu} linkItems={linkItems} layout={layout} />
+      {menubar?.layoutStyle?.map((item: any, index: number) => renderComponent(item, index))}
+      <MobileMenu 
+        open={open} toggleMenu={toggleMenu} 
+        linkItems={linkItems} layout={menubar} 
+        key="MobileMenu"
+        />
     </nav>
   );
 };

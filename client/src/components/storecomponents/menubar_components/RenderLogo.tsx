@@ -17,8 +17,7 @@ const RenderLogo: React.FC<RenderLogoProps> = ({ logo }) => {
   const mobileLogoStyle = menubar?.mobile?.logoStyle;
 
   const renderLogoContent = (style: any) => {
-    const {
-      placement = {},
+    const { // placement = {},
       background,
       text: textStyle,
     } = style || {};
@@ -27,8 +26,8 @@ const RenderLogo: React.FC<RenderLogoProps> = ({ logo }) => {
       <div
         className="flex items-center justify-center"
         style={{
-          position: placement?.isAbsolute ? "absolute" : "static",
-          top: placement?.topMargin,
+          // position: placement?.isAbsolute ? "absolute" : "static",
+          // top: placement?.topMargin,
           ...getBackgroundStyles(background),
           maxHeight: "20vh",
           ...getBorderStyles(background?.border),

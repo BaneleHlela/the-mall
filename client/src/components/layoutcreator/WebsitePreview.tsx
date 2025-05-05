@@ -4,10 +4,10 @@ import Menubar from '../storecomponents/Menubar';
 import { setInitialLayout } from '../../features/layouts/layoutSettingsSlice';
 import { RootState } from '../../app/store';
 import RecursiveRenderer from './pages/RecursiveRenderer';
+import ScribblerComponent from '../ScribblerComponent';
 
 const WebsitePreview = () => {
   const dispatch = useDispatch();
-
   const layoutSettings = useSelector((state: RootState) => state.layoutSettings);
 
   useEffect(() => {
@@ -23,13 +23,19 @@ const WebsitePreview = () => {
     };
   }, [dispatch]);
 
-
   return (
     <div>
-      {/* render your layout using layoutSettings from Redux */}
-      <Menubar layoutSettingsFrom={layoutSettings}/>
-      <RecursiveRenderer settings={layoutSettings.pages.welcome} />
-      <p>Hey, I am the DynamicDiv</p>
+      {/* Render your menubar */}
+      <Menubar layoutSettingsFrom={layoutSettings.menubar} />
+
+      {/* Dynamically render RecursiveRenderer for each page */}
+      {layoutSettings.pages && Object.entries(layoutSettings.pages).map(([pageName, pageSettings]) => (
+        <div key={pageName}>
+          <RecursiveRenderer settings={pageSettings} />
+        </div>
+      ))}
+      <ScribblerComponent />
+      {/* You can remove the <p>Hey, I am the DynamicDiv</p> now */}
     </div>
   );
 };

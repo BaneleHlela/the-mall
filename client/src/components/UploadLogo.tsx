@@ -32,15 +32,26 @@ const UploadLogo: React.FC = () => {
     setSelectedFile(null);
   };
 
-  const handleDelete = () => {
-    if (!store?._id) return alert("Store ID missing.");
-
+  const handleDelete = async () => {
+    if (!store?._id) {
+      alert("Store ID missing.");
+      return;
+    }
+  
     const confirmed = window.confirm("Are you sure you want to delete the current logo?");
-    if (confirmed) {
-      dispatch(deleteStoreLogo({ storeId: store._id }));
-      alert("Logo deleted.");
+    if (!confirmed) return;
+  
+    try {
+      await dispatch(deleteStoreLogo({ storeId: store._id })).unwrap();
+      alert("Logo deleted successfully.");
+      setSelectedFile(null);
+      setTextLogo("");
+    } catch (error) {
+      console.error("Failed to delete logo:", error);
+      alert("Failed to delete logo. Please try again.");
     }
   };
+  
 
   const handleTextLogoSubmit = () => {
     if (!textLogo) return alert("Please enter text for the logo.");
@@ -87,12 +98,12 @@ const UploadLogo: React.FC = () => {
         </div>
       )}
 
-      {!logo?.url && logo?.text && (
+      {/* {!logo?.url && logo?.text && (
         <div className="mt-2">
           <p className="text-xs text-gray-500">Current Text Logo:</p>
           <p className="text-sm italic text-gray-600">"{logo.text}"</p>
         </div>
-      )}
+      )} */}
 
       <div className="mt-4">
         <label className="text-sm font-medium">Text Logo (optional):</label>
@@ -101,6 +112,7 @@ const UploadLogo: React.FC = () => {
           value={textLogo}
           onChange={handleTextLogoChange}
           className="border p-2 text-sm w-full mt-1"
+          placeholder={logo.text ? logo.text : ""}
         />
         <button
           onClick={handleTextLogoSubmit}

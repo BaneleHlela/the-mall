@@ -1,7 +1,7 @@
 import expressAsyncHandler from 'express-async-handler';
 import { Store } from '../models/storeModel.js';
 import { Storage} from "@google-cloud/storage";
-import { uploadToUploads } from '../config/gcsClient.js';
+import { uploadToUploads, uploadsBucket } from '../config/gcsClient.js';
 
 
 // Add a new store
@@ -129,47 +129,48 @@ async function deleteOldLogo(filePath) {
   }
 }
 
-// uploadStoreLogo
+// Upload store logo
 export const uploadStoreLogo = expressAsyncHandler(async (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ message: 'No file uploaded' });
-  }
-
-  const store = await Store.findById(req.params.storeId);
-  if (!store) {
-    return res.status(404).json({ message: 'Store not found' });
-  }
-
-  // Delete old logo if exists
-  if (store.logo.url) {
-    const oldFilePath = store.logo.url.split(`${uploadsBucket.name}/`)[1]; // Use store.logo.url to get the path
-    try {
-      await uploadsBucket.file(oldFilePath).delete();
-      console.log(`Old logo deleted: ${oldFilePath}`);
-    } catch (error) {
-      console.error(`Error deleting old logo: ${error.message}`);
-    }
-  }
-
-  // Upload new logo
-  const fileName = `stores/${store._id}/logo/${Date.now()}_${req.file.originalname}`;
-
   try {
-    await uploadToUploads(req.file.buffer, fileName);
+    const { storeId } = req.params;
+    const file = req.file;
+    const fileName = req.body.fileName || file.originalname;
+
+    if (!file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    const store = await Store.findById(storeId);
+    if (!store) {
+      return res.status(404).json({ message: "Store not found" });
+    }
+
+    // Delete old logo if it exists
+    if (store.logo && store.logo.url) {
+      const oldFilePath = store.logo.url.split(`the-mall-uploads-giza69/`)[1]; // Adjust to match your new bucket!
+      try {
+        await uploadsBucket.file(oldFilePath).delete();
+        console.log(`Old logo deleted: ${oldFilePath}`);
+      } catch (error) {
+        console.error(`Error deleting old logo:`, error.message);
+      }
+    }
+
+    // Upload new logo
+    const destination = `stores/${storeId}/logo/${Date.now()}_${fileName}`;
+    await uploadToUploads(file.buffer, destination);
+
+    const publicUrl = `https://storage.googleapis.com/the-mall-uploads-giza69/${destination}`;
+
+    // Update store document
+    store.logo = { url: publicUrl };
+    await store.save();
+
+    res.status(200).json({ message: "Logo uploaded successfully", url: publicUrl });
   } catch (error) {
-    console.error('Error uploading store logo:', error);
-    return res.status(500).json({ message: 'Failed to upload store logo' });
+    console.error("Upload logo error:", error);
+    res.status(500).json({ message: "Failed to upload logo" });
   }
-
-  const publicUrl = `https://storage.googleapis.com/${uploadsBucket.name}/${fileName}`;
-  console.log("public url ", publicUrl);
-
-  // Save new logo URL in the database
-  store.logo.url = publicUrl;
-
-  await store.save();
-
-  res.status(200).json({ message: 'Logo uploaded successfully', url: publicUrl });
 });
 
 
@@ -177,30 +178,33 @@ export const uploadStoreLogo = expressAsyncHandler(async (req, res) => {
 
 // Delete store logo
 export const deleteStoreLogo = expressAsyncHandler(async (req, res) => {
-  const { storeId } = req.params;
+  try {
+    const { storeId } = req.params;
 
-  // Find the store by ID
-  const store = await Store.findById(storeId);
-  if (!store) {
-    return res.status(404).json({ message: 'Store not found' });
-  }
-
-  if (store.logo && store.logo.url) {
-    // Handle deleting file-based logo (URL)
-    const oldFilePath = store.logo.url.split(`${bucket.name}/`)[1]; // Extract the path after the bucket name
-    try {
-      await bucket.file(oldFilePath).delete();
-      console.log(`Old logo deleted: ${oldFilePath}`);
-    } catch (error) {
-      console.error(`Error deleting old logo: ${error.message}`);
+    const store = await Store.findById(storeId);
+    if (!store) {
+      return res.status(404).json({ message: "Store not found" });
     }
+
+    if (store.logo && store.logo.url) {
+      const oldFilePath = store.logo.url.split(`the-mall-uploads-giza69/`)[1]; // Important: split correctly
+      try {
+        await uploadsBucket.file(oldFilePath).delete();
+        console.log(`Old logo deleted: ${oldFilePath}`);
+      } catch (error) {
+        console.error(`Error deleting logo:`, error.message);
+      }
+    }
+
+    // Clear logo fields
+    store.logo = { url: "" };
+    await store.save();
+
+    res.status(200).json({ message: "Logo deleted successfully", storeId: store._id });
+  } catch (error) {
+    console.error("Delete logo error:", error);
+    res.status(500).json({ message: "Failed to delete logo" });
   }
-
-  // Reset the logo (both URL and text cases)
-  store.logo = { url: '', text: '' };
-  await store.save();
-
-  res.status(200).json({ storeId: store._id });
 });
 
 

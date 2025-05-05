@@ -40,19 +40,21 @@ const storeService = {
     return response.data;
   },
 
-  // Upload store logo
   uploadStoreLogo: async (storeId: string, logoFile: File): Promise<string> => {
-    try {
-      const formData = new FormData();
-      formData.append('logo', logoFile);
+    const formData = new FormData();
+    formData.append('logo', logoFile);
 
+    try {
       const response = await axios.put(`${API_URL}/${storeId}/logo`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
 
-      // Return the logo URL from the response
+      if (response.status !== 200 || !response.data.url) {
+        throw new Error('Invalid response from server');
+      }
+
       return response.data.url;
     } catch (error) {
       console.error('Error uploading store logo:', error);
@@ -60,16 +62,16 @@ const storeService = {
     }
   },
 
+
   deleteStoreLogo: async (storeId: string): Promise<string> => {
     try {
-      const response = await axios.delete(`${API_URL}/${storeId}/logo`);
-      return response.data.storeId; // you could also return just `storeId` manually if you prefer
-    } catch (error) {
-      console.error('Error deleting store logo:', error);
-      throw new Error('Failed to delete store logo');
+        const response = await axios.delete(`${API_URL}/${storeId}/logo`);
+        return response.data.storeId; // you could also return just `storeId` manually if you prefer
+      } catch (error) {
+        console.error('Error deleting store logo:', error);
+        throw new Error('Failed to delete store logo');
+      }
     }
-  }
-
-};
+  };
 
 export default storeService;
