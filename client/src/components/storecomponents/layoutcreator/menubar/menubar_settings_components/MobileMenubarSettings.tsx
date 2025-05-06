@@ -5,6 +5,7 @@ import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import LinksStyleEditor from "./components/LinksStyleEditor";
 import ExtrasStyleEditor from "./components/ExtrasStyleEditor";
 import LogoStyleEditor from "./components/LogoStyleEditor";
+import CartAndWishlistSettings from "../../../../layouts/settings/cartAndWishlistSettings";
 
 interface MobileMenubarSettingsProps {
   objectPath: string; // Path within the settings object
@@ -43,7 +44,6 @@ const MobileMenubarEditor: React.FC<MobileMenubarSettingsProps> = ({
         settings={settings}
         handleSettingChange={handleSettingChange}
       />
-      
       {/* Logo Style Dropdown */}
       <LogoStyleEditor 
         objectPath="menubar.mobile.logoStyle"

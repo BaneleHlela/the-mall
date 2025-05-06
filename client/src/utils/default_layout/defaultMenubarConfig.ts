@@ -1,3 +1,5 @@
+import { text } from "stream/consumers";
+
 export const borderFill = {
   borderStyle: "none",
   borderWidth: "1",
@@ -5,6 +7,33 @@ export const borderFill = {
   borderDirection: "all",
   color: "#000000"
 }
+export const displayFill = {
+  display: "block",
+  visibility: "visible",
+  overflow: {
+    x: "visible",
+    y: "visible",
+  },
+  flex: {
+    direction: "row",
+    justifyContent: "flex-start",
+    alignItems: "stretch",
+    wrap: "nowrap",
+    gap: "",
+  },
+  grid: {
+    templateColumns: "",
+    templateRows: "",
+    gap: "",
+    rowGap: "",
+    columnGap: "",
+    autoFlow: "row",
+  },
+  float: "none",
+  clear: "none",
+  order: 0,
+};
+
 
 export const backgroundFill = {
   padding: {
@@ -126,6 +155,25 @@ const defaultMenubarConfig = {
   mobile: {
     itemsLayoutStyle: ["hamburger", "logo", "extras"],
     background: backgroundFill,
+    cartAndWishlist: {
+      isDisplayed: true,
+      display: displayFill,
+      text: textFill,
+      background: backgroundFill,
+      cartIcon: {
+        name: "ShoppingBagCartIcon",
+        background: backgroundFill
+      },
+      cartCount: {
+        text: textFill,
+        background: backgroundFill
+      },
+      wishlistIcon: {
+        isDisplayed: false,
+        name: "GrFavorite",
+        background: backgroundFill,
+      }
+    },
     popMenuStyle: {
       links: {
         border: {

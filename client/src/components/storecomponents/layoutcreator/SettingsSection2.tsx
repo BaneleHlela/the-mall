@@ -1,4 +1,4 @@
-import MenubarSettings from "../../layoutcreator/menubar/MenubarSettings";
+import MenubarSettings from "../../layouts/menubar/MenubarSettings";
 
 
 const SettingsSection2 = () => {

@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import SettingsSection2 from '../../components/layoutcreator/SettingsSection2.tsx';
-import StorePage from '../StorePage.tsx';
+import SettingsSection2 from '../../components/layouts/settings/SettingsSection2.tsx';
+import StorePage from '../StoreFront.tsx';
 import { FaMobileAlt } from 'react-icons/fa';
 import { IoIosDesktop, IoMdTabletPortrait } from 'react-icons/io';
-import SaveLayoutButton from '../../components/layoutcreator/components/SaveLayoutButton.tsx';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store.ts';
+import SaveLayoutButton from "../../components/layouts/settings/SaveLayoutButton.tsx";
 
 const DeviceSelector: React.FC<{ setDevice: (device: string) => void }> = ({ setDevice }) => {
   const deviceSizes = [

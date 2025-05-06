@@ -3,8 +3,9 @@ import { getBackgroundStyles, getTextStyles } from "../../../utils/stylingFuncti
 import { Squash, Squeeze, Sling, Rotate } from "hamburger-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store.ts";
-import DynamicIcon from "../../layoutcreator/components/DynamicIcon.tsx";
 import { getAnimationClass } from "../../../utils/helperFunctions.ts";
+import {DynamicIcon} from "lucide-react/dynamic";
+import CartAndWishlist from "../../layouts/preview/CartAndWishlist.tsx";
 
 interface RenderExtrasProps {
   layout: any;
@@ -20,10 +21,10 @@ const RenderExtras: React.FC<RenderExtrasProps> = ({ open, toggleMenu }) => {
   const desktopExtras = menubar?.desktop?.extras || {};
   const mobileExtras = menubar?.mobile?.extras || {};
   const hamburger = menubar?.mobile?.hamburger;
+  const mobileCartAndWishlist = menubar?.mobile;
 
   const { socialIcons, button, extraIcons } = desktopExtras;
   const { extraIcons: mobileExtraIcons } = mobileExtras;
-
   return (
     <>
       {/* Desktop & Tablet */}
@@ -126,6 +127,14 @@ const RenderExtras: React.FC<RenderExtrasProps> = ({ open, toggleMenu }) => {
             ))}
           </div>
         )}
+
+        {/*Cart and Wishlist*/}
+        {mobileCartAndWishlist?.isDisplayed && 
+          <div className="z-50"> 
+            <CartAndWishlist settings={mobileCartAndWishlist} cartCount={7} />
+          </div>
+        }
+        <CartAndWishlist settings={mobileCartAndWishlist} cartCount={7} />
 
         {/* Hamburger Menu */}
         {hamburger?.Type && (

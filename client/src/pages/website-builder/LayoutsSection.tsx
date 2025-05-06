@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 import { Routes, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { fetchStoreById } from '../../features/stores/storeSlice';
-import StorePage from '../StorePage.tsx';
+import StorePage from '../StoreFront.tsx';
 import PreSettings2 from './PreSettings2';
 import WebsiteBuilder from './WebsiteBuilder';
-import WebsitePreview from "../../components/layoutcreator/WebsitePreview.tsx";
+import WebsitePreview from "../../components/layouts/WebsitePreview.tsx";
 import { RootState } from "../../app/store.ts";
 
 const LayoutsSection: React.FC = () => {

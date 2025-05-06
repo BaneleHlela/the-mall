@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import ShadowEditor from "./ShadowEditor.tsx";
-import GradientEditor from "./GradientEditor.tsx";
-import ClipPathEditor from "./ClipPathEditor.tsx";
-import PositionEditor from "./PositionEditor.tsx";
+
 import BorderEditor from "./BorderEditor.tsx";
 import PaddingEditor from "./PaddingEditor.tsx";
 import MarginEditor from "./MarginEditor.tsx";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import PositionEditor from "../../../../layouts/settings/background/PositionEditor.tsx";
+import ShadowEditor from "../../../../layouts/settings/background/ShadowEditor.tsx";
+import GradientEditor from "../../../../layouts/settings/background/GradientEditor.tsx";
+import ClipPathEditor from "../../../../layouts/settings/background/ClipPathEditor.tsx";
 
 interface BackgroundEditorProps {
   objectPath: string;

@@ -10,6 +10,10 @@ import LoginPage from "./pages/auth/pages/LoginPage.tsx";
 import EmailVerificationPage from "./pages/auth/pages/EmailVerificationPage.tsx";
 import ForgotPasswordPage from "./pages/auth/pages/ForgotPasswordPage.tsx";
 import ResetPasswordPage from "./pages/auth/pages/ResetPasswordPage.tsx";
+import Home from "./pages/Home.tsx";
+import Layouts from "./pages/Layouts.tsx";
+import Profile from "./pages/Profile.tsx";
+import Stores from "./pages/Stores.tsx";
 
 
 const App: React.FC = () => {
@@ -26,6 +30,10 @@ const App: React.FC = () => {
 			}
 		/> */}
         <Route path="/scribbler" element={<ScribblerComponent />} />
+		<Route path="/home" element={<Home />} />
+		<Route path="/stores" element={<Stores />} />
+		<Route path="/layouts" element={<Layouts />} />
+		<Route path="/profile" element={<Profile />} />
         <Route
 			path='/signup'
 			element={

@@ -96,6 +96,25 @@ const layoutSchema = new mongoose.Schema({
           background: {}
         }
       },
+      cartAndWishlist: {
+        isDisplayed: {type: Boolean, default: false},
+        display: {},
+        text: {},
+        background: {},
+        cartIcon: {
+          name: { type: String, default: "ShoppingBagCartIcon"},
+          background: {}
+        },
+        cartCount: {
+          text: {},
+          background: {}
+        },
+        wishlistIcon: {
+          isDisplayed: {type: Boolean, default: false},
+          name: { type: String, default: "GrFavorite"},
+          background: {}
+        },
+      },
       extras: {
         socialIcons: {
           background: {},

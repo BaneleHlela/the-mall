@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "git-filter-repo": "^0.0.30"
+    "@themall/icons": "^1.0.2",
+    "git-filter-repo": "^0.0.30",
+    "mall-icons": "^1.0.0"
   }
 }
