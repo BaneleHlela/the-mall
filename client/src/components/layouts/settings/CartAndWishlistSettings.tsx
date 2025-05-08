@@ -102,6 +102,11 @@ const CartAndWishlistSettings: React.FC<CartAndWishlistSettingsProps> = ({
               fullPath("cartIcon.name"),
               settings?.cartAndWishlist?.cartIcon?.name
             )}
+            <TextEditor
+              objectPath={fullPath("cartIcon.text")}
+              settings={settings}
+              handleSettingChange={handleSettingChange}
+            />
             <BackgroundEditor
               objectPath={fullPath("cartIcon.background")}
               settings={settings}
@@ -148,6 +153,11 @@ const CartAndWishlistSettings: React.FC<CartAndWishlistSettingsProps> = ({
                   fullPath("wishlistIcon.name"),
                   settings?.cartAndWishlist?.wishlistIcon?.name
                 )}
+                <TextEditor
+                  objectPath={fullPath("wishlistIcon.text")}
+                  settings={settings}
+                  handleSettingChange={handleSettingChange}
+                />
                 <BackgroundEditor
                   objectPath={fullPath("wishlistIcon.background")}
                   settings={settings}

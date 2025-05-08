@@ -72,6 +72,24 @@ export const textFill =  {
   backgroundColor: "transparent",
 }
 
+export const cartAndWishlist = {
+  isDisplayed: true,
+  display: displayFill,
+  background: backgroundFill,
+  cartIcon: {
+    name: "ShoppingBagCartIcon",
+    background: backgroundFill
+  },
+  cartCount: {
+    text: textFill,
+    background: backgroundFill
+  },
+  wishlistIcon: {
+    isDisplayed: false,
+    name: "GrFavorite",
+    background: backgroundFill,
+  }
+}
 
 const defaultMenubarConfig = {
   layoutStyle: ["logo", "links", "extras"],
@@ -106,6 +124,7 @@ const defaultMenubarConfig = {
         special: {}
       }
     },
+    cartAndWishlist: cartAndWishlist,
     extras: {
       socialIcons: {
         background: backgroundFill,
@@ -155,25 +174,7 @@ const defaultMenubarConfig = {
   mobile: {
     itemsLayoutStyle: ["hamburger", "logo", "extras"],
     background: backgroundFill,
-    cartAndWishlist: {
-      isDisplayed: true,
-      display: displayFill,
-      text: textFill,
-      background: backgroundFill,
-      cartIcon: {
-        name: "ShoppingBagCartIcon",
-        background: backgroundFill
-      },
-      cartCount: {
-        text: textFill,
-        background: backgroundFill
-      },
-      wishlistIcon: {
-        isDisplayed: false,
-        name: "GrFavorite",
-        background: backgroundFill,
-      }
-    },
+    cartAndWishlist: cartAndWishlist,
     popMenuStyle: {
       links: {
         border: {

@@ -5,6 +5,7 @@ import LinksStyleEditor from "./components/LinksStyleEditor";
 import ExtrasStyleEditor from "./components/ExtrasStyleEditor";
 import LogoStyleEditor from "./components/LogoStyleEditor";
 import BackgroundEditor from "../../settings/background/BackgroundEditor.tsx";
+import CartAndWishlistSettings from "../../settings/cartAndWishlistSettings.tsx";
 
 interface DesktopMenubarSettingsProps {
   objectPath: string; // Path within the settings object
@@ -41,6 +42,11 @@ const DesktopMenubarSettings: React.FC<DesktopMenubarSettingsProps> = ({
   return (
     <div className="w-full">
       {/* Drag and drop for itemsLayoutStyle */}
+      <CartAndWishlistSettings 
+        objectPath="menubar.desktop"
+        settings={settings}
+        handleSettingChange={handleSettingChange}
+      />
       <BackgroundEditor
         objectPath="menubar.desktop.background"
         settings={settings}

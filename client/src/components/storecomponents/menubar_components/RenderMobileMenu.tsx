@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from "../../../app/store.ts";
 import Logo from "../Logo.tsx";
 import DynamicIcon from "../layoutcreator/DynamicIcon.tsx";
-import { getBackgroundStyles, getTextStyles } from "../../../utils/stylingFunctions.ts";
+import { getBackgroundStyles, getBorderStyles, getTextStyles } from "../../../utils/stylingFunctions.ts";
 
 interface MobileMenuProps {
   linkItems: string[];
@@ -24,21 +24,21 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ linkItems, open, toggleMenu, la
 
   return (
     <div
-      style={{
-        ...getBackgroundStyles(background),
-        height: "full",
-        width: popMenuStyle?.width,
-        ...getTextStyles(textStyle),
-        backgroundColor: background?.color,
-      }}
-      className={`
-        ${popMenuStyle?.coverHeader ? "fixed right-0 bottom-0" : "absolute top-full"}
-        md:hidden w-screen h-screen transform transition-transform duration-300 ease-in-out 
-        ${open ? popMenuStyle?.transitions?.enter : popMenuStyle?.transitions?.exit} 
-        ${popMenuStyle?.burstOut ? "opacity-0" : ""} 
-        font-bold flex flex-col justify-evenly items-center z-40
-      `}
-    >
+    style={{
+      ...getBackgroundStyles(background),
+      ...getBorderStyles(background?.border),
+      ...getTextStyles(textStyle),
+      backgroundColor: background?.color,
+    }}
+    className={`
+      ${popMenuStyle?.coverHeader ? "absolute top-full right-0" : "fixed top-0 right-0" }
+      w-screen h-screen 
+      transform transition-transform duration-300 ease-in-out 
+      ${open ? "translate-x-0" : "translate-x-full"} 
+      font-bold flex flex-col justify-evenly items-center z-40
+    `}
+  >
+
       {/* Logo Section */}
       <div className="flex flex-col gap-2">
         <Logo objectPath="logoStyle" logo={logo} />

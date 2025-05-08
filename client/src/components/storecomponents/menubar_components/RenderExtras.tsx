@@ -22,6 +22,7 @@ const RenderExtras: React.FC<RenderExtrasProps> = ({ open, toggleMenu }) => {
   const mobileExtras = menubar?.mobile?.extras || {};
   const hamburger = menubar?.mobile?.hamburger;
   const mobileCartAndWishlist = menubar?.mobile;
+  const desktopCartAndWishlist = menubar?.desktop;
 
   const { socialIcons, button, extraIcons } = desktopExtras;
   const { extraIcons: mobileExtraIcons } = mobileExtras;
@@ -29,6 +30,13 @@ const RenderExtras: React.FC<RenderExtrasProps> = ({ open, toggleMenu }) => {
     <>
       {/* Desktop & Tablet */}
       <div className="hidden md:flex h-full items-center gap-2">
+        {/*Cart and Wishlist*/}
+        {desktopCartAndWishlist?.isDisplayed && 
+          <div className="z-50"> 
+            <CartAndWishlist settings={desktopCartAndWishlist} cartCount={7} />
+          </div>
+        }
+        <CartAndWishlist settings={desktopCartAndWishlist} cartCount={7} />
         {/* Button */}
         {button?.display && (
           <a

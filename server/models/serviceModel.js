@@ -23,6 +23,10 @@ const serviceSchema = new mongoose.Schema({
     ref: 'Store',
     required: true,
   },
+  thumbnail: {
+    type: String,
+    required: true,
+  },
   reviews: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Review',

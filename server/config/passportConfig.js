@@ -47,8 +47,8 @@ passport.use(new GoogleStrategy(
           lastName,
           password: hashedPassword,
           avatar: profile.photos?.[0].value,
+          isVerified: true
         });
-        // generateTokenAndSetCookie(res, user._id);
       }
 
       done(null, user);
@@ -86,6 +86,7 @@ passport.use(new FacebookStrategy(
           password: hashedPassword,
           email: profile.emails?.[0]?.value,
           avatar: profile.photos?.[0]?.value,
+          isVerified: true
         };
 
         user = await User.create(newUserData);

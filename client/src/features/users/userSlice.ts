@@ -147,6 +147,12 @@ const userSlice = createSlice({
     clearMessage: (state) => {
       state.message = null;
     },
+    setUser(state, action: PayloadAction<AuthState["user"]>) {
+      state.user = action.payload;
+    },
+    clearUser(state) {
+      state.user = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -224,5 +230,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { clearError, clearMessage } = userSlice.actions;
+export const { clearError, clearMessage, setUser, clearUser } = userSlice.actions;
 export default userSlice.reducer;

@@ -2,15 +2,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useState } from "react";
 
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
-import MenubarExtrasEditor from '../settings/MenubarExtrasEditor.tsx';
-import LogoDisplaySettings from '../settings/LogoDisplaySettings.tsx';
-import LinksSettings from '../settings/LinksSettings.tsx';
 import DesktopMenubarSettings from './menubar_settings_components/DesktopMenubarSettings';
 import TabletMenubarSettings from './menubar_settings_components/TabletMenubarSettings';
 import MobileMenubarSettings from './menubar_settings_components/MobileMenubarSettings';
 import { RootState } from '../../../app/store';
 import { updateSetting } from '../../../features/layouts/layoutSettingsSlice';
-import UploadLogo from '../../UploadLogo';
 import LayoutStyleDnD from "../settings/LayoutStyleDnd.tsx";
 import BackgroundEditor from "../settings/background/BackgroundEditor.tsx";
 import TextEditor from "../settings/text/TextEditor.tsx";
@@ -123,31 +119,6 @@ const MenuSettings = () => {
                   handleSettingChange={handleSettingChange}
                 />
               )}
-            </div>
-          </div>
-
-          
-
-          <div className='border-[3px] rounded-md p-1'>
-            <label htmlFor="editorDropdown" className="block text-sm font-medium text-gray-700">
-              Choose what to edit
-            </label>
-            <select
-              id="editorDropdown"
-              value={selectedOption || ''}
-              onChange={(e) => setSelectedOption(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 sm:text-sm"
-            >
-              <option value="">-- Select --</option>
-              <option value="menubarExtras">Menubar Extras Editor</option>
-              <option value="logoSettings">Logo Display Settings</option>
-              <option value="linkSettings">Links Settings Editor</option>
-            </select>
-
-            <div className="mt-4">
-              {selectedOption === 'menubarExtras' && <MenubarExtrasEditor/>}
-              {selectedOption === 'logoSettings' && <LogoDisplaySettings storeId={currentStore._id} />}
-              {selectedOption === 'linkSettings' && <LinksSettings linkItems={["Home", "About", "Services", "Products"]} />}
             </div>
           </div>
         </div>

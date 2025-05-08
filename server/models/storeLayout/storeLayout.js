@@ -38,6 +38,26 @@ const layoutSchema = new mongoose.Schema({
           special: {},
         }
       },
+      cartAndWishlist: {
+        isDisplayed: {type: Boolean, default: false},
+        display: {},
+        background: {},
+        cartIcon: {
+          name: { type: String, default: "ShoppingBagCartIcon"},
+          text: {},
+          background: {}
+        },
+        cartCount: {
+          text: {},
+          background: {}
+        },
+        wishlistIcon: {
+          isDisplayed: {type: Boolean, default: false},
+          name: { type: String, default: "GrFavorite"},
+          text: {},
+          background: {}
+        },
+      },
       extras: {
         socialIcons: {
           background: {},
@@ -99,10 +119,10 @@ const layoutSchema = new mongoose.Schema({
       cartAndWishlist: {
         isDisplayed: {type: Boolean, default: false},
         display: {},
-        text: {},
         background: {},
         cartIcon: {
           name: { type: String, default: "ShoppingBagCartIcon"},
+          text: {},
           background: {}
         },
         cartCount: {
@@ -112,6 +132,7 @@ const layoutSchema = new mongoose.Schema({
         wishlistIcon: {
           isDisplayed: {type: Boolean, default: false},
           name: { type: String, default: "GrFavorite"},
+          text: {},
           background: {}
         },
       },

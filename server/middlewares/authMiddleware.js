@@ -1,4 +1,4 @@
-import { User } from "../models/userModel.js";
+import { User } from "../models/UserModel.js";
 import jwt from "jsonwebtoken";
 import expressAsyncHandler from "express-async-handler";
 
@@ -9,7 +9,8 @@ export const authMiddleware = expressAsyncHandler(async (req, res, next) => {
         try {
             if (token) {
                 const decoded = jwt.verify(token, process.env.JWT_SECRET);
-                const user = await User.findById(decoded?.id);
+                console.log(decoded);
+                const user = await User.findById(decoded?.userId);
                 if (!user) {
                     return res.status(401).json({ message: "User not found" });
                 }

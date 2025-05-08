@@ -18,7 +18,7 @@ import {
 } from "mall-cart-icon";
 import { MdFavorite } from "react-icons/md";
 import { GrFavorite } from "react-icons/gr";
-import { getBackgroundStyles, getDisplayStyles, getTextStyles } from "../../../utils/stylingFunctions";
+import { getBackgroundStyles, getBorderStyles, getDisplayStyles, getTextStyles } from "../../../utils/stylingFunctions";
 import defaultMenubarConfig from "../../../utils/default_layout/defaultMenubarConfig";
 
 const iconMap: Record<string, React.FC<any>> = {
@@ -74,7 +74,7 @@ const CartAndWishlist: React.FC<CartAndWishlistProps> = ({
   // onCartClick,
   // onWishlistClick,
 }) => {
-  const cfg = settings?.cartAndWishlist ? settings?.cartAndWishlist : defaultMenubarConfig.mobile.cartAndWishlist;
+  const cfg = settings?.cartAndWishlist ? settings?.cartAndWishlist : defaultMenubarConfig.desktop.cartAndWishlist;
   console.log(cfg)
   if (!cfg?.isDisplayed) return null;
 
@@ -86,6 +86,7 @@ const CartAndWishlist: React.FC<CartAndWishlistProps> = ({
         display: "flex",
         alignItems: "center",
         ...getDisplayStyles(cfg.display),
+        ...getBorderStyles(cfg.background.border), 
         ...getBackgroundStyles(cfg.background),
       }}
     >
@@ -100,10 +101,16 @@ const CartAndWishlist: React.FC<CartAndWishlistProps> = ({
         }}
         // onClick={onCartClick}
       >
-        <div style={{ ...getBackgroundStyles(cfg.cartIcon.background) }}>
-          <CartIcon size={cfg.text?.fontSize} color={cfg.text?.color}/>
+        <div style={{ ...getBorderStyles(cfg.cartIcon.background.border), ...getBackgroundStyles(cfg.cartIcon.background) }}>
+          <CartIcon size={cfg.cartIcon?.text?.fontSize} color={cfg.cartIcon?.text?.color}/>
         </div>
-        <div style={{ ...getBackgroundStyles(cfg.cartCount.background) }}>
+        <div 
+          style={{ 
+            ...getBorderStyles(cfg.cartCount.background.border), 
+            ...getBackgroundStyles(cfg.cartCount.background) 
+          }}
+          className="flex items-center justify-center"
+        >
           <span style={{ ...getTextStyles(cfg.cartCount.text) }}>{cartCount}</span>
         </div>
       </div>
@@ -118,8 +125,8 @@ const CartAndWishlist: React.FC<CartAndWishlistProps> = ({
           }}
           //onClick={onWishlistClick}
         >
-          <div style={{ ...getBackgroundStyles(cfg.wishlistIcon.background) }}>
-            <WishlistIcon size={cfg.text?.fontSize} color={cfg.text?.color}/>
+          <div style={{ ...getBorderStyles(cfg.wishlistIcon.background.border), ...getBackgroundStyles(cfg.wishlistIcon.background) }}>
+            <WishlistIcon size={cfg.wishlistIcon?.text?.fontSize} color={cfg.wishlistIcon?.text?.color}/>
           </div>
         </div>
       )}

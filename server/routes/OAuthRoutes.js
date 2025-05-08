@@ -1,5 +1,6 @@
 import express from 'express';
 import passport from 'passport';
+import { generateTokenAndSetCookie } from '../config/generateTokenAndSetCookie.js';
 
 const router = express.Router();
 
@@ -10,11 +11,19 @@ router.get('/google', passport.authenticate('google', {
 
 // Callback route
 router.get(
-  '/google/callback',
-  passport.authenticate('google', {
-    failureRedirect: '/login',
-    successRedirect: 'http://localhost:3000', // or wherever you want to redirect after login
-  })
+  "/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login", session: false }),
+  (req, res) => {
+    if (!req.user) {
+      return res.status(401).json({ message: "Authentication failed" });
+    }
+
+    // Generate token and set the cookie
+    generateTokenAndSetCookie(res, req.user._id);
+
+    // Redirect after successful authentication
+    res.redirect("http://localhost:3000"); 
+  }
 );
 
 // Logout route
@@ -33,11 +42,19 @@ router.get('/facebook', passport.authenticate('facebook', { scope: ['email'] }))
 
 // Facebook callback
 router.get(
-  '/facebook/callback',
-  passport.authenticate('facebook', {
-    failureRedirect: '/login',
-    successRedirect: 'http://localhost:3000', // or frontend route
-  })
+  "/facebook/callback",
+  passport.authenticate("facebook", { failureRedirect: "/login", session: false }),
+  (req, res) => {
+    if (!req.user) {
+      return res.status(401).json({ message: "Authentication failed" });
+    }
+
+    // Generate token and set the cookie
+    generateTokenAndSetCookie(res, req.user._id);
+
+    // Redirect after successful authentication
+    res.redirect("http://localhost:3000"); 
+  }
 );
 
 export default router;

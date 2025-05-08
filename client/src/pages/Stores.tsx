@@ -1,8 +1,29 @@
+import { Routes, Route } from "react-router-dom";
+import AddStoreForm from "./stores/AddStore";
+import ProtectedRoute from "../components/mall/authorization/ProtectedRoute";
 
-const Store = () => {
+const Stores = () => {
   return (
-    <div>Store</div>
-  )
-}
+    <>
+      <div>Stores</div>
+      <Routes>
+        {/* <Route 
+          path="add" 
+          element={
+            <ProtectedRoute>
+              <AddStoreForm />
+            </ProtectedRoute>
+          } 
+        /> */}
+        <Route 
+          path="add" 
+          element={
+              <AddStoreForm />
+          } 
+        />
+      </Routes>
+    </>
+  );
+};
 
-export default Store
+export default Stores;
